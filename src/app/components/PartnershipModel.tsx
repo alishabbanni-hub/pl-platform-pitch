@@ -19,7 +19,7 @@ const partners: Partner[] = [
 // Distance from center to each partner circle's center, in pixels.
 const RADIUS = 200;
 // Stagger between each partner appearing, in ms.
-const STAGGER_MS = 180;
+const STAGGER_MS = 500;
 
 export function PartnershipModel() {
   const [visibleCount, setVisibleCount] = useState(0);
