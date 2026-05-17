@@ -61,6 +61,11 @@ const CAMERA_PAN_SHIFT_PCT = 28;                        // how far the scene sli
 // === Phase 3 knobs ===
 // Distance from c2's center to each Element's center, in pixels.
 const SATELLITE_RADIUS = 260;
+// When phase 3 starts (click on p2), the arrow shrinks and slides slightly
+// to the left to make visual room for the Elements appearing around p2.
+const ARROW_PHASE_3_SCALE = 0.7;        // arrow shrinks to this fraction
+const ARROW_PHASE_3_SHIFT_PX = 50;      // arrow slides this many pixels left
+const ARROW_PHASE_3_TRANSITION_MS = 500;// duration of the shrink + shift
 
 export function PartnershipModel() {
   // Phase 0 = initial (only center visible).
@@ -235,13 +240,18 @@ export function PartnershipModel() {
           </div>
         </div>
 
-        {/* Straight arrow — draws itself in phase 2. */}
+        {/* Straight arrow — draws itself in phase 2. In phase 3 it shrinks
+            and slides slightly left to make room for the Elements around p2. */}
         <div
           className="absolute pointer-events-none"
           style={{
             top: '50%',
             left: '56%',
-            transform: 'translate(-50%, -50%)',
+            transform:
+              phase === 3
+                ? `translate(-50%, -50%) translateX(-${ARROW_PHASE_3_SHIFT_PX}px) scale(${ARROW_PHASE_3_SCALE})`
+                : `translate(-50%, -50%)`,
+            transition: `transform ${ARROW_PHASE_3_TRANSITION_MS}ms ease-in-out`,
           }}
         >
           <svg
