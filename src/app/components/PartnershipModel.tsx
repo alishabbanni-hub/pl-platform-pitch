@@ -51,7 +51,7 @@ export function PartnershipModel() {
   return (
     <section className="relative min-h-screen w-full overflow-hidden bg-white flex items-center justify-center">
       {/* Header */}
-      <div className="absolute top-12 left-12 right-12">
+      <div className="absolute top-6 left-12 right-12">
         <h1 className="text-3xl md:text-4xl font-semibold text-slate-900">
           Partnership &amp; Collaboration Model
         </h1>
