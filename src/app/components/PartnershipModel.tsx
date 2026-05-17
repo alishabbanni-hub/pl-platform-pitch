@@ -31,6 +31,9 @@ const PHASE_2_SHIFT_PX = 300;
 const PHASE_2_TRANSITION_MS = 900;
 // How long the arrow takes to draw itself, after pentagon settles.
 const ARROW_DRAW_MS = 600;
+// Pause AFTER arrow has fully drawn, BEFORE the new circle appears.
+// This is what guarantees the user reads "arrow first, then circle".
+const CIRCLE_DELAY_AFTER_ARROW_MS = 400;
 // Arrow line length in pixels.
 const ARROW_LENGTH = 200;
 
@@ -170,7 +173,9 @@ export function PartnershipModel() {
             height={24}
             style={{ display: 'block', overflow: 'visible' }}
           >
-            {/* Line that "draws" via stroke-dashoffset. */}
+            {/* Line that "draws" via stroke-dashoffset.
+                strokeDashoffset is set via inline style (not as a JSX attribute)
+                so the CSS transition reliably picks it up across browsers. */}
             <line
               x1={0}
               y1={12}
@@ -180,18 +185,18 @@ export function PartnershipModel() {
               strokeWidth={3}
               strokeLinecap="round"
               strokeDasharray={ARROW_LENGTH}
-              strokeDashoffset={isPhase2 ? 0 : ARROW_LENGTH}
               style={{
+                strokeDashoffset: isPhase2 ? 0 : ARROW_LENGTH,
                 transition: `stroke-dashoffset ${ARROW_DRAW_MS}ms ease-out ${PHASE_2_TRANSITION_MS}ms`,
               }}
             />
-            {/* Arrowhead — fades in as the line finishes. */}
+            {/* Arrowhead — lands exactly when the line finishes drawing. */}
             <polygon
               points={`${ARROW_LENGTH},12 ${ARROW_LENGTH - 14},5 ${ARROW_LENGTH - 14},19`}
               fill="#64748b"
               style={{
                 opacity: isPhase2 ? 1 : 0,
-                transition: `opacity 180ms ease-out ${PHASE_2_TRANSITION_MS + ARROW_DRAW_MS - 100}ms`,
+                transition: `opacity 200ms ease-out ${PHASE_2_TRANSITION_MS + ARROW_DRAW_MS - 200}ms`,
               }}
             />
           </svg>
@@ -216,10 +221,11 @@ export function PartnershipModel() {
               lineHeight: 1.3,
               opacity: isPhase2 ? 1 : 0,
               transform: `scale(${isPhase2 ? 1 : 0.3})`,
-              // Circle waits until the arrow has fully drawn before appearing.
+              // Circle waits until the arrow has fully drawn AND a clear
+              // pause has passed, so the sequence reads "arrow, then circle".
               transition:
-                `opacity 500ms ease-out ${PHASE_2_TRANSITION_MS + ARROW_DRAW_MS}ms, ` +
-                `transform 500ms ease-out ${PHASE_2_TRANSITION_MS + ARROW_DRAW_MS}ms`,
+                `opacity 500ms ease-out ${PHASE_2_TRANSITION_MS + ARROW_DRAW_MS + CIRCLE_DELAY_AFTER_ARROW_MS}ms, ` +
+                `transform 500ms ease-out ${PHASE_2_TRANSITION_MS + ARROW_DRAW_MS + CIRCLE_DELAY_AFTER_ARROW_MS}ms`,
             }}
           >
             Awareness on school struggles challenges
