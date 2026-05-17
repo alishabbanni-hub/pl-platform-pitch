@@ -9,11 +9,11 @@ interface Partner {
 }
 
 const partners: Partner[] = [
-  { name: 'Partner 1', bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
-  { name: 'Partner 2', bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
-  { name: 'Partner 3', bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
-  { name: 'Partner 4', bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
-  { name: 'Partner 5', bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
+  { name: 'Schools', bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
+  { name: 'School Boards', bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
+  { name: 'Edu Organizations ', bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
+  { name: 'NGOs', bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
+  { name: 'Research Institutes', bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
 ];
 
 // === Phase 1 knobs ===
@@ -185,9 +185,9 @@ export function PartnershipModel() {
               }}
             >
               <span className="text-center leading-tight">
-                Your
+                Structured
                 <br />
-                Platform
+                Discovery Framework
               </span>
             </button>
           </div>
@@ -264,7 +264,7 @@ export function PartnershipModel() {
                 `transform 500ms ease-out ${ARROW_DRAW_MS + CIRCLE_DELAY_AFTER_ARROW_MS}ms`,
             }}
           >
-            Awareness on school struggles challenges
+            Professional Learning Intelligence
           </div>
         </div>
         </div>
