@@ -25,8 +25,10 @@ const STAGGER_MS = 180;
 // === Phase 2 knobs ===
 // Pentagon shrinks to this fraction of its full size.
 const PHASE_2_SCALE = 0.55;
+// How far the pentagon slides left when entering phase 2, in pixels.
+const PHASE_2_SHIFT_PX = 300;
 // How long the pentagon takes to shrink + slide left.
-const PHASE_2_TRANSITION_MS = 700;
+const PHASE_2_TRANSITION_MS = 900;
 // How long the arrow takes to draw itself, after pentagon settles.
 const ARROW_DRAW_MS = 600;
 // Arrow line length in pixels.
@@ -93,16 +95,19 @@ export function PartnershipModel() {
       {/* Stage — absolute-positioned scene. */}
       <div className="flex-1 relative">
 
-        {/* Pentagon wrapper — shifts left and scales down in phase 2. */}
+        {/* Pentagon wrapper — shifts left and scales down in phase 2.
+            Uses a single `transform` (GPU-accelerated) so the slide + shrink
+            stay perfectly smooth instead of jumping. */}
         <div
           className="absolute"
           style={{
             top: '50%',
-            left: isPhase2 ? '25%' : '50%',
-            transform: `scale(${isPhase2 ? PHASE_2_SCALE : 1})`,
-            transition:
-              `left ${PHASE_2_TRANSITION_MS}ms ease-in-out, ` +
-              `transform ${PHASE_2_TRANSITION_MS}ms ease-in-out`,
+            left: '50%',
+            transform: isPhase2
+              ? `translate3d(${-PHASE_2_SHIFT_PX}px, 0, 0) scale(${PHASE_2_SCALE})`
+              : `translate3d(0, 0, 0) scale(1)`,
+            transition: `transform ${PHASE_2_TRANSITION_MS}ms ease-in-out`,
+            willChange: 'transform',
           }}
         >
           {/* 0×0 pivot — children positioned relative to (0, 0). */}
@@ -211,9 +216,10 @@ export function PartnershipModel() {
               lineHeight: 1.3,
               opacity: isPhase2 ? 1 : 0,
               transform: `scale(${isPhase2 ? 1 : 0.3})`,
+              // Circle waits until the arrow has fully drawn before appearing.
               transition:
-                `opacity 500ms ease-out ${PHASE_2_TRANSITION_MS + ARROW_DRAW_MS - 200}ms, ` +
-                `transform 500ms ease-out ${PHASE_2_TRANSITION_MS + ARROW_DRAW_MS - 200}ms`,
+                `opacity 500ms ease-out ${PHASE_2_TRANSITION_MS + ARROW_DRAW_MS}ms, ` +
+                `transform 500ms ease-out ${PHASE_2_TRANSITION_MS + ARROW_DRAW_MS}ms`,
             }}
           >
             Awareness on school struggles challenges
