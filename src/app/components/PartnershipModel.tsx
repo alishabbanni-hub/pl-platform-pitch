@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 interface Partner {
   name: string;
@@ -37,12 +37,30 @@ const CIRCLE_DELAY_AFTER_ARROW_MS = 400;
 // Arrow line length in pixels.
 const ARROW_LENGTH = 200;
 
+// === Phase 2 — cinematic camera pan ===
+// After the new circle appears, the whole scene slides left so the new
+// circle ends up centered on the screen — like a camera pan focusing on it.
+const CAMERA_PAN_DELAY_MS = 2500;        // ms after phase 2 starts before the pan kicks in
+const CAMERA_PAN_DURATION_MS = 1200;     // how long the pan animates
+const CAMERA_PAN_SHIFT_PCT = 28;         // how far the scene slides left (% of stage width)
+
 export function PartnershipModel() {
   // Phase 0 = initial (only center visible).
   // Phase 1 = pentagon revealed (partners around center).
   // Phase 2 = pentagon zoomed out + arrow drawn + new circle visible.
   const [phase, setPhase] = useState<0 | 1 | 2>(0);
   const [visibleCount, setVisibleCount] = useState(0);
+  // Camera pan kicks in automatically a moment after the new circle appears.
+  const [isCameraPanned, setIsCameraPanned] = useState(false);
+
+  useEffect(() => {
+    if (phase === 2) {
+      const id = setTimeout(() => setIsCameraPanned(true), CAMERA_PAN_DELAY_MS);
+      return () => clearTimeout(id);
+    }
+    // On phase reset (0 or 1) make sure the camera is back to neutral.
+    setIsCameraPanned(false);
+  }, [phase]);
 
   const handleCenterClick = useCallback(() => {
     if (phase === 0) {
@@ -96,7 +114,20 @@ export function PartnershipModel() {
       </header>
 
       {/* Stage — absolute-positioned scene. */}
-      <div className="flex-1 relative">
+      <div className="flex-1 relative overflow-hidden">
+
+        {/* Camera — slides the whole scene left in phase 2's final beat,
+            so the new circle ends up centered on screen. Triggered
+            automatically a moment after the new circle has appeared. */}
+        <div
+          className="absolute inset-0"
+          style={{
+            transform: isCameraPanned
+              ? `translateX(-${CAMERA_PAN_SHIFT_PCT}%)`
+              : 'translateX(0)',
+            transition: `transform ${CAMERA_PAN_DURATION_MS}ms ease-in-out`,
+          }}
+        >
 
         {/* Pentagon wrapper — shifts left and scales down in phase 2.
             Uses a single `transform` (GPU-accelerated) so the slide + shrink
@@ -230,6 +261,7 @@ export function PartnershipModel() {
           >
             Awareness on school struggles challenges
           </div>
+        </div>
         </div>
       </div>
 
