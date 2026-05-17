@@ -200,7 +200,7 @@ export function PartnershipModel() {
           className="absolute pointer-events-none"
           style={{
             top: '50%',
-            left: '50%',
+            left: '56%',
             transform: 'translate(-50%, -50%)',
           }}
         >
