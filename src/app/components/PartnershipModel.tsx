@@ -62,8 +62,8 @@ export function PartnershipModel() {
 
       {/* Stage — fills the remaining vertical space; pentagon is centered inside it. */}
       <div className="flex-1 flex items-center justify-center">
-        <div className="relative" style={{ width: 0, height: 0 }}>
-          {/* Partner circles — rendered before the center so the center sits on top. */}
+      <div className="relative mt-20" style={{ width: 0, height: 0 }}>       
+      {/* Partner circles — rendered before the center so the center sits on top. */}
           {partners.map((p, i) => {
             const isVisible = i < visibleCount;
             return (
