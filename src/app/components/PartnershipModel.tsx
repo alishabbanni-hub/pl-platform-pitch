@@ -16,6 +16,15 @@ const partners: Partner[] = [
   { name: 'Research Institutes',  bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
 ];
 
+// Phase 3 satellites — orbit around c2 (Professional Learning Intelligence).
+const satellites: Partner[] = [
+  { name: 'Element 1',            bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
+  { name: 'Element 2',            bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
+  { name: 'Element 3',            bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
+  { name: 'Element 4',            bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
+  { name: 'Element 5',            bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
+];
+
 // === Phase 1 knobs ===
 // Distance from center to each partner circle's center, in pixels.
 const RADIUS = 260;
@@ -49,12 +58,18 @@ const CAMERA_PAN_DELAY_MS = 0;                          // start at the same ins
 const CAMERA_PAN_DURATION_MS = PHASE_2_TRANSITION_MS;   // end at the same instant as the pentagon
 const CAMERA_PAN_SHIFT_PCT = 28;                        // how far the scene slides left (% of stage width)
 
+// === Phase 3 knobs ===
+// Distance from c2's center to each Element's center, in pixels.
+const SATELLITE_RADIUS = 260;
+
 export function PartnershipModel() {
   // Phase 0 = initial (only center visible).
   // Phase 1 = pentagon revealed (partners around center).
-  // Phase 2 = pentagon zoomed out + arrow drawn + new circle visible.
-  const [phase, setPhase] = useState<0 | 1 | 2>(0);
+  // Phase 2 = pentagon zoomed out + arrow drawn + new circle visible + camera panned.
+  // Phase 3 = Elements revealed orbiting around c2.
+  const [phase, setPhase] = useState<0 | 1 | 2 | 3>(0);
   const [visibleCount, setVisibleCount] = useState(0);
+  const [visibleSatelliteCount, setVisibleSatelliteCount] = useState(0);
   // Camera pan kicks in automatically a moment after the new circle appears.
   const [isCameraPanned, setIsCameraPanned] = useState(false);
 
@@ -63,8 +78,10 @@ export function PartnershipModel() {
       const id = setTimeout(() => setIsCameraPanned(true), CAMERA_PAN_DELAY_MS);
       return () => clearTimeout(id);
     }
-    // On phase reset (0 or 1) make sure the camera is back to neutral.
-    setIsCameraPanned(false);
+    // Phase 3 keeps the camera panned (no change here).
+    if (phase === 0 || phase === 1) {
+      setIsCameraPanned(false);
+    }
   }, [phase]);
 
   const handleCenterClick = useCallback(() => {
@@ -78,13 +95,21 @@ export function PartnershipModel() {
     } else if (phase === 1 && visibleCount === partners.length) {
       // Advance to phase 2 — pentagon zooms out, arrow + new circle appear.
       setPhase(2);
-    } else if (phase === 2) {
+    } else if (phase === 2 && isCameraPanned) {
+      // Advance to phase 3 — Elements reveal around c2 one by one.
+      setPhase(3);
+      setVisibleSatelliteCount(0);
+      for (let i = 1; i <= satellites.length; i++) {
+        setTimeout(() => setVisibleSatelliteCount(i), i * STAGGER_MS);
+      }
+    } else if (phase === 3 && visibleSatelliteCount === satellites.length) {
       // Loop back to the start for replay.
       setPhase(0);
       setVisibleCount(0);
+      setVisibleSatelliteCount(0);
     }
-    // Otherwise: ignore clicks during the partner-reveal animation.
-  }, [phase, visibleCount]);
+    // Otherwise: ignore clicks during animations in progress.
+  }, [phase, visibleCount, visibleSatelliteCount, isCameraPanned]);
 
   // 5 evenly distributed angles, starting at 12 o'clock and going clockwise.
   const positions = partners.map((_, i) => {
@@ -95,7 +120,16 @@ export function PartnershipModel() {
     };
   });
 
-  const isPhase2 = phase === 2;
+  // Same angular distribution for the Elements around c2, but with their own radius.
+  const satellitePositions = satellites.map((_, i) => {
+    const angle = ((-90 + i * 72) * Math.PI) / 180;
+    return {
+      x: Math.cos(angle) * SATELLITE_RADIUS,
+      y: Math.sin(angle) * SATELLITE_RADIUS,
+    };
+  });
+
+  const isPhase2 = phase === 2 || phase === 3;
 
   const hintText =
     phase === 0
@@ -104,6 +138,12 @@ export function PartnershipModel() {
       ? 'Revealing…'
       : phase === 1
       ? 'Click the center to see what emerges →'
+      : phase === 2 && !isCameraPanned
+      ? 'Revealing…'
+      : phase === 2
+      ? 'Click the center to reveal the elements →'
+      : phase === 3 && visibleSatelliteCount < satellites.length
+      ? 'Revealing…'
       : 'Click the center again to replay';
 
   return (
@@ -238,35 +278,61 @@ export function PartnershipModel() {
           </svg>
         </div>
 
-        {/* "Result" circle on the right — appears at the end of phase 2. */}
+        {/* c2 "Result" circle on the right + its own pentagon of Elements (phase 3). */}
         <div
           className="absolute"
           style={{
             top: '50%',
             left: '78%',
-            transform: 'translate(-50%, -50%)',
           }}
         >
-          <div
-            className="flex items-center justify-center rounded-full bg-indigo-600 text-white font-semibold text-center shadow-2xl shadow-indigo-600/40"
-            style={{
-              width: 200,
-              height: 200,
-              padding: 18,
-              fontSize: 14,
-              lineHeight: 1.3,
-              opacity: isPhase2 ? 1 : 0,
-              transform: `scale(${isPhase2 ? 1 : 0.3})`,
-              // Circle still waits until the arrow has fully drawn AND a clear
-              // pause has passed, so the sequence reads "arrow, then circle".
-              // No more upfront PHASE_2_TRANSITION_MS delay — everything starts
-              // the moment phase 2 begins.
-              transition:
-                `opacity 500ms ease-out ${ARROW_DRAW_MS + CIRCLE_DELAY_AFTER_ARROW_MS}ms, ` +
-                `transform 500ms ease-out ${ARROW_DRAW_MS + CIRCLE_DELAY_AFTER_ARROW_MS}ms`,
-            }}
-          >
-            Professional Learning Intelligence
+          {/* 0×0 pivot at c2's center — Elements orbit this point. */}
+          <div className="relative" style={{ width: 0, height: 0 }}>
+            {/* Element satellites — rendered before c2 so c2 sits on top. */}
+            {satellites.map((s, i) => {
+              const isVisible = i < visibleSatelliteCount;
+              return (
+                <div
+                  key={s.name}
+                  className={`absolute flex items-center justify-center rounded-full text-white font-semibold text-sm md:text-base text-center shadow-xl transition-all duration-500 ease-out ${s.bg} ${s.shadow}`}
+                  style={{
+                    width: 144,
+                    height: 144,
+                    left: satellitePositions[i].x,
+                    top: satellitePositions[i].y,
+                    transform: `translate(-50%, -50%) scale(${isVisible ? 1 : 0.3})`,
+                    opacity: isVisible ? 1 : 0,
+                  }}
+                >
+                  {s.name}
+                </div>
+              );
+            })}
+
+            {/* c2 — appears at the end of phase 2. */}
+            <div
+              className="absolute flex items-center justify-center rounded-full bg-indigo-600 text-white font-semibold text-center shadow-2xl shadow-indigo-600/40"
+              style={{
+                width: 200,
+                height: 200,
+                padding: 18,
+                fontSize: 14,
+                lineHeight: 1.3,
+                left: 0,
+                top: 0,
+                transform: `translate(-50%, -50%) scale(${isPhase2 ? 1 : 0.3})`,
+                opacity: isPhase2 ? 1 : 0,
+                // Circle still waits until the arrow has fully drawn AND a clear
+                // pause has passed, so the sequence reads "arrow, then circle".
+                // No more upfront PHASE_2_TRANSITION_MS delay — everything starts
+                // the moment phase 2 begins.
+                transition:
+                  `opacity 500ms ease-out ${ARROW_DRAW_MS + CIRCLE_DELAY_AFTER_ARROW_MS}ms, ` +
+                  `transform 500ms ease-out ${ARROW_DRAW_MS + CIRCLE_DELAY_AFTER_ARROW_MS}ms`,
+              }}
+            >
+              Professional Learning Intelligence
+            </div>
           </div>
         </div>
         </div>
