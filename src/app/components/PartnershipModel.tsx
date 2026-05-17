@@ -9,11 +9,11 @@ interface Partner {
 }
 
 const partners: Partner[] = [
-  { name: 'Schools', bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
-  { name: 'School Boards', bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
-  { name: 'Edu Organizations ', bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
-  { name: 'NGOs', bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
-  { name: 'Research Institutes', bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
+  { name: 'Schools',              bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
+  { name: 'School Boards',        bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
+  { name: 'Edu Organizations ',   bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
+  { name: 'NGOs',                 bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
+  { name: 'Research Institutes',  bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
 ];
 
 // === Phase 1 knobs ===
@@ -28,7 +28,9 @@ const PHASE_2_SCALE = 0.55;
 // How far the pentagon slides left when entering phase 2, in pixels.
 const PHASE_2_SHIFT_PX = 300;
 // How long the pentagon takes to shrink + slide left.
-const PHASE_2_TRANSITION_MS = 900;
+// The camera pan derives its duration from this same constant, so the
+// pentagon zoom-out and the camera pan always run in perfect lockstep.
+const PHASE_2_TRANSITION_MS = 1400;
 // How long the arrow takes to draw itself, after pentagon settles.
 const ARROW_DRAW_MS = 600;
 // Pause AFTER arrow has fully drawn, BEFORE the new circle appears.
@@ -155,7 +157,8 @@ export function PartnershipModel() {
               return (
                 <div
                   key={p.name}
-                    className={`absolute flex items-center justify-center rounded-full text-white font-semibold text-sm md:text-base text-center shadow-xl transition-all duration-500 ease-out ${p.bg} ${p.shadow}`}                  style={{
+                  className={`absolute flex items-center justify-center rounded-full text-white font-semibold text-sm md:text-base text-center shadow-xl transition-all duration-500 ease-out ${p.bg} ${p.shadow}`}
+                  style={{
                     width: 144,
                     height: 144,
                     left: positions[i].x,
