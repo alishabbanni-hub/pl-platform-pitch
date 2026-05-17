@@ -18,9 +18,9 @@ const partners: Partner[] = [
 
 // Phase 3 satellites — orbit around c2 (Professional Learning Intelligence).
 const satellites: Partner[] = [
-  { name: 'Element 1',            bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
-  { name: 'Element 2',            bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
-  { name: 'Element 3',            bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
+  { name: 'Challenge Taxonomy',            bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
+  { name: 'Urgent Needs',            bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
+  { name: 'Recurring Phenomena',            bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
   { name: 'Element 4',            bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
   { name: 'Element 5',            bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
 ];
@@ -63,8 +63,8 @@ const CAMERA_PAN_SHIFT_PCT = 28;                        // how far the scene sli
 const SATELLITE_RADIUS = 260;
 // When phase 3 starts (click on p2), the arrow shrinks and slides slightly
 // to the left to make visual room for the Elements appearing around p2.
-const ARROW_PHASE_3_SCALE = 0.5;        // arrow shrinks to this fraction
-const ARROW_PHASE_3_SHIFT_PX = 70;      // arrow slides this many pixels left
+const ARROW_PHASE_3_SCALE = 0.7;        // arrow shrinks to this fraction
+const ARROW_PHASE_3_SHIFT_PX = 50;      // arrow slides this many pixels left
 const ARROW_PHASE_3_TRANSITION_MS = 500;// duration of the shrink + shift
 
 export function PartnershipModel() {
