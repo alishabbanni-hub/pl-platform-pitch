@@ -185,9 +185,9 @@ export function PartnershipModel() {
               }}
             >
               <span className="text-center leading-tight">
-                Professional
+                Research
                 <br />
-                Learning Intelligence
+                & Discovery
               </span>
             </button>
           </div>
@@ -262,7 +262,9 @@ export function PartnershipModel() {
                 `transform 500ms ease-out ${PHASE_2_TRANSITION_MS + ARROW_DRAW_MS + CIRCLE_DELAY_AFTER_ARROW_MS}ms`,
             }}
           >
-            Awareness on school struggles challenges
+                Professional
+                <br />
+                Learning Intelligence
           </div>
         </div>
         </div>
