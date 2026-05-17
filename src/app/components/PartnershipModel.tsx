@@ -91,8 +91,8 @@ export function PartnershipModel() {
             aria-label="Reveal partners"
             className="absolute flex items-center justify-center rounded-full bg-slate-900 text-white font-semibold text-xl md:text-2xl shadow-2xl shadow-slate-900/30 cursor-pointer transition-transform duration-200 hover:scale-105 active:scale-95"
             style={{
-              width: 220,
-              height: 220,
+              width: 170,
+              height: 170,
               left: 0,
               top: 0,
               transform: 'translate(-50%, -50%)',
