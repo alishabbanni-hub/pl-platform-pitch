@@ -49,66 +49,68 @@ export function PartnershipModel() {
       : 'Click the center again to replay';
 
   return (
-    <section className="relative min-h-screen w-full overflow-hidden bg-white flex items-center justify-center">
-      {/* Header */}
-      <div className="absolute top-4 left-12 right-12">
+    <section className="relative min-h-screen w-full overflow-hidden bg-white flex flex-col">
+      {/* Header — its own row at the top. */}
+      <header className="px-12 pt-8 pb-4">
         <h1 className="text-3xl md:text-4xl font-semibold text-slate-900">
           Partnership &amp; Collaboration Model
         </h1>
         <p className="mt-2 text-base md:text-lg text-slate-500">
           How our Professional Learning platform connects the ecosystem
         </p>
+      </header>
+
+      {/* Stage — fills the remaining vertical space; pentagon is centered inside it. */}
+      <div className="flex-1 flex items-center justify-center">
+        <div className="relative" style={{ width: 0, height: 0 }}>
+          {/* Partner circles — rendered before the center so the center sits on top. */}
+          {partners.map((p, i) => {
+            const isVisible = i < visibleCount;
+            return (
+              <div
+                key={p.name}
+                className={`absolute flex items-center justify-center rounded-full text-white font-semibold text-sm md:text-base shadow-xl transition-all duration-500 ease-out ${p.bg} ${p.shadow}`}
+                style={{
+                  width: 144,
+                  height: 144,
+                  left: positions[i].x,
+                  top: positions[i].y,
+                  transform: `translate(-50%, -50%) scale(${isVisible ? 1 : 0.3})`,
+                  opacity: isVisible ? 1 : 0,
+                }}
+              >
+                {p.name}
+              </div>
+            );
+          })}
+
+          {/* Center circle — clickable. */}
+          <button
+            type="button"
+            onClick={handleCenterClick}
+            aria-label="Reveal partners"
+            className="absolute flex items-center justify-center rounded-full bg-slate-900 text-white font-semibold text-xl md:text-2xl shadow-2xl shadow-slate-900/30 cursor-pointer transition-transform duration-200 hover:scale-105 active:scale-95"
+            style={{
+              width: 220,
+              height: 220,
+              left: 0,
+              top: 0,
+              transform: 'translate(-50%, -50%)',
+            }}
+          >
+            <span className="text-center leading-tight">
+              Your
+              <br />
+              Platform
+            </span>
+          </button>
+        </div>
       </div>
 
-      {/* Stage — pivot point at center of viewport. */}
-      <div className="relative" style={{ width: 0, height: 0 }}>
-        {/* Partner circles — rendered before the center so the center sits on top. */}
-        {partners.map((p, i) => {
-          const isVisible = i < visibleCount;
-          return (
-            <div
-              key={p.name}
-              className={`absolute flex items-center justify-center rounded-full text-white font-semibold text-sm md:text-base shadow-xl transition-all duration-500 ease-out ${p.bg} ${p.shadow}`}
-              style={{
-                width: 144,
-                height: 144,
-                left: positions[i].x,
-                top: positions[i].y,
-                transform: `translate(-50%, -50%) scale(${isVisible ? 1 : 0.3})`,
-                opacity: isVisible ? 1 : 0,
-              }}
-            >
-              {p.name}
-            </div>
-          );
-        })}
-
-        {/* Center circle — clickable. */}
-        <button
-          type="button"
-          onClick={handleCenterClick}
-          aria-label="Reveal partners"
-          className="absolute flex items-center justify-center rounded-full bg-slate-900 text-white font-semibold text-xl md:text-2xl shadow-2xl shadow-slate-900/30 cursor-pointer transition-transform duration-200 hover:scale-105 active:scale-95"
-          style={{
-            width: 220,
-            height: 220,
-            left: 0,
-            top: 0,
-            transform: 'translate(-50%, -50%)',
-          }}
-        >
-          <span className="text-center leading-tight">
-            Your
-            <br />
-            Platform
-          </span>
-        </button>
-      </div>
-
-      {/* Hint */}
-      <p className="absolute bottom-8 left-1/2 -translate-x-1/2 text-sm text-slate-400">
-        {hintText}
-      </p>
+      {/* Hint — its own row at the bottom. */}
+      <footer className="pb-8 text-center">
+        <p className="text-sm text-slate-400">{hintText}</p>
+      </footer>
     </section>
   );
 }
