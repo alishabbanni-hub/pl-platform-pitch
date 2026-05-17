@@ -185,9 +185,9 @@ export function PartnershipModel() {
               }}
             >
               <span className="text-center leading-tight">
-                Your
+                Professional
                 <br />
-                Platform
+                Learning Intelligence
               </span>
             </button>
           </div>
