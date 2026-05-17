@@ -38,11 +38,14 @@ const CIRCLE_DELAY_AFTER_ARROW_MS = 400;
 const ARROW_LENGTH = 200;
 
 // === Phase 2 — cinematic camera pan ===
-// After the new circle appears, the whole scene slides left so the new
-// circle ends up centered on the screen — like a camera pan focusing on it.
-const CAMERA_PAN_DELAY_MS = 2500;        // ms after phase 2 starts before the pan kicks in
-const CAMERA_PAN_DURATION_MS = 1200;     // how long the pan animates
-const CAMERA_PAN_SHIFT_PCT = 28;         // how far the scene slides left (% of stage width)
+// The whole scene slides left so the new circle ends up centered on the
+// screen — like a camera pan focusing on it. The pan runs CONCURRENTLY
+// with the arrow drawing and the new circle appearing, so it feels like
+// one single fluid motion instead of two separate phases.
+const CAMERA_PAN_DELAY_MS = PHASE_2_TRANSITION_MS;     // start the moment the arrow begins drawing
+const CAMERA_PAN_DURATION_MS =                          // end the moment the new circle has finished appearing
+  ARROW_DRAW_MS + CIRCLE_DELAY_AFTER_ARROW_MS + 500;
+const CAMERA_PAN_SHIFT_PCT = 28;                        // how far the scene slides left (% of stage width)
 
 export function PartnershipModel() {
   // Phase 0 = initial (only center visible).
