@@ -309,9 +309,15 @@ export function PartnershipModel() {
               );
             })}
 
-            {/* c2 — appears at the end of phase 2. */}
-            <div
-              className="absolute flex items-center justify-center rounded-full bg-indigo-600 text-white font-semibold text-center shadow-2xl shadow-indigo-600/40"
+            {/* p2 — appears at the end of phase 2. Clickable: in phase 2 it
+                advances to phase 3 (Elements reveal). Pointer events are
+                disabled while p2 is invisible so accidental clicks on the
+                right side of the screen during phase 0/1 do nothing. */}
+            <button
+              type="button"
+              onClick={handleCenterClick}
+              aria-label="Reveal Elements around p2"
+              className="absolute flex items-center justify-center rounded-full bg-indigo-600 text-white font-semibold text-center shadow-2xl shadow-indigo-600/40 cursor-pointer"
               style={{
                 width: 200,
                 height: 200,
@@ -320,8 +326,10 @@ export function PartnershipModel() {
                 lineHeight: 1.3,
                 left: 0,
                 top: 0,
+                border: 'none',
                 transform: `translate(-50%, -50%) scale(${isPhase2 ? 1 : 0.3})`,
                 opacity: isPhase2 ? 1 : 0,
+                pointerEvents: isPhase2 ? 'auto' : 'none',
                 // Circle still waits until the arrow has fully drawn AND a clear
                 // pause has passed, so the sequence reads "arrow, then circle".
                 // No more upfront PHASE_2_TRANSITION_MS delay — everything starts
@@ -332,7 +340,7 @@ export function PartnershipModel() {
               }}
             >
               Professional Learning Intelligence
-            </div>
+            </button>
           </div>
         </div>
         </div>
