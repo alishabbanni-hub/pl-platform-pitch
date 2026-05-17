@@ -11,7 +11,7 @@ interface Partner {
 const partners: Partner[] = [
   { name: 'Schools', bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
   { name: 'School Boards', bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
-  { name: 'Government & Edu Agencies', bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
+  { name: 'Government Agencies', bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
   { name: 'NGOs', bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
   { name: 'Teachers', bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
 ];
