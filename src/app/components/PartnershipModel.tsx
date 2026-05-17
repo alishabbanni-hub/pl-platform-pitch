@@ -155,8 +155,7 @@ export function PartnershipModel() {
               return (
                 <div
                   key={p.name}
-                  className={`absolute flex items-center justify-center rounded-full text-white font-semibold text-sm md:text-base shadow-xl transition-all duration-500 ease-out ${p.bg} ${p.shadow}`}
-                  style={{
+                    className={`absolute flex items-center justify-center rounded-full text-white font-semibold text-sm md:text-base text-center shadow-xl transition-all duration-500 ease-out ${p.bg} ${p.shadow}`}                  style={{
                     width: 144,
                     height: 144,
                     left: positions[i].x,
