@@ -504,7 +504,7 @@ export function PartnershipModel() {
                   `transform 500ms ease-out ${ARROW_DRAW_MS + CIRCLE_DELAY_AFTER_ARROW_MS}ms`,
               }}
             >
-              P3 Circle
+              Participatory Professional Learning Solution Design
             </button>
           </div>
         </div>
