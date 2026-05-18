@@ -18,11 +18,11 @@ const partners: Partner[] = [
 
 // Phase 3 satellites — orbit around p2 (Professional Learning Intelligence).
 const satellites: Partner[] = [
-  { name: 'Element 1',            bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
-  { name: 'Element 2',            bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
-  { name: 'Element 3',            bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
-  { name: 'Element 4',            bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
-  { name: 'Element 5',            bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
+  { name: 'Recurring Patterns',            bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
+  { name: 'Urgent Needs',            bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
+  { name: 'High-Impact Intervention Areas',            bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
+  { name: 'Emerging Phenomena',            bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
+  { name: 'Emotional Struggles',            bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
 ];
 
 // Phase 5 satellites — orbit around p3. PLACEHOLDER NAMES — rename to taste.
