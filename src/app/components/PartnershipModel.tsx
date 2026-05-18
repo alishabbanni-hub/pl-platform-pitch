@@ -20,7 +20,7 @@ const partners: Partner[] = [
 const satellites: Partner[] = [
   { name: 'Recurring Patterns',            bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
   { name: 'Urgent Needs',            bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
-  { name: 'High-Impact Intervention Areas',            bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
+  { name: 'Intervention Areas',            bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
   { name: 'Emerging Phenomena',            bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
   { name: 'Emotional Struggles',            bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
 ];
@@ -403,7 +403,7 @@ export function PartnershipModel() {
                   `transform 500ms ease-out ${ARROW_DRAW_MS + CIRCLE_DELAY_AFTER_ARROW_MS}ms`,
               }}
             >
-              Professional Learning Intelligence
+              Contextual Intelligence
             </button>
           </div>
         </div>
