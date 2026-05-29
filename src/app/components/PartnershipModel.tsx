@@ -35,89 +35,113 @@ const satellites2: Partner[] = [
   { name: 'Integrators',            bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
 ];
 
-// Phase 7 satellites — orbit around p4 (eLearning Solution).
+// Phase 7 satellites — orbit around p4 (eLearning Course).
 const satellites3: Partner[] = [
-  { name: 'Scenario-based',        bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
+  { name: 'Scenario-driven',        bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
   { name: 'Immersive',              bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
-  { name: 'Experiential',       bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
+  { name: 'Experience-based',       bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
   { name: 'Engagement Strategies',  bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
   { name: 'Teach Toolkits',         bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
 ];
 
 // === Phase 1 knobs ===
-// Distance from center to each partner circle's center, in pixels.
 const RADIUS = 200;
-// Stagger between each partner appearing, in ms.
 const STAGGER_MS = 180;
 
 // === Phase 2 knobs ===
-// Pentagon shrinks to this fraction of its full size.
 const PHASE_2_SCALE = 0.55;
-// How far the pentagon slides left when entering phase 2, in pixels.
 const PHASE_2_SHIFT_PX = 300;
-// How long the pentagon takes to shrink + slide left.
-// The camera pan derives its duration from this same constant, so the
-// pentagon zoom-out and the camera pan always run in perfect lockstep.
 const PHASE_2_TRANSITION_MS = 1400;
-// How long the arrow takes to draw itself, after pentagon settles.
 const ARROW_DRAW_MS = 600;
-// Pause AFTER arrow has fully drawn, BEFORE the new circle appears.
-// This is what guarantees the user reads "arrow first, then circle".
 const CIRCLE_DELAY_AFTER_ARROW_MS = 400;
-// Arrow line length in pixels.
 const ARROW_LENGTH = 200;
 
 // === Phase 2 — cinematic camera pan ===
-// Camera pan runs in PERFECT LOCKSTEP with the pentagon's zoom-out:
-// same start, same end, same duration. The pentagon shrinks-and-shifts
-// while the camera pans, so the whole leftward motion reads as a single
-// continuous slide. The arrow and circle then appear afterwards in the
-// already-shifted scene.
-const CAMERA_PAN_DELAY_MS = 0;                          // start at the same instant as the pentagon
-const CAMERA_PAN_DURATION_MS = PHASE_2_TRANSITION_MS;   // end at the same instant as the pentagon
-const CAMERA_PAN_SHIFT_PCT = 28;                        // how far the scene slides left PER STAGE (% of stage width)
+const CAMERA_PAN_DELAY_MS = 0;
+const CAMERA_PAN_DURATION_MS = PHASE_2_TRANSITION_MS;
+const CAMERA_PAN_SHIFT_PCT = 28;
 
 // === Phase 3 knobs ===
-// Distance from p2's center to each Element's center, in pixels.
 const SATELLITE_RADIUS = 200;
-// When phase 3 starts (click on p2), arrow 1 shrinks and slides slightly
-// to the left to make visual room for the Elements appearing around p2.
-// The same shrink+shift is reused for arrow 2 in phase 5 and arrow 3 in phase 7.
-const ARROW_PHASE_3_SCALE = 0.7;        // arrow shrinks to this fraction
-const ARROW_PHASE_3_SHIFT_PX = 50;      // arrow slides this many pixels left
-const ARROW_PHASE_3_TRANSITION_MS = 500;// duration of the shrink + shift
+const ARROW_PHASE_3_SCALE = 0.7;
+const ARROW_PHASE_3_SHIFT_PX = 50;
+const ARROW_PHASE_3_TRANSITION_MS = 500;
 
 // === Phase 4 / 5 layout knobs ===
-// p3's horizontal position in the stage (% of stage width). After camera
-// pan stage 2 (= 2 * CAMERA_PAN_SHIFT_PCT = 56%), this places p3 dead-centre.
 const P3_LEFT_PCT = 106;
-// Second arrow's horizontal position in the stage (% of stage width).
-// Roughly mid-way between the shrunken p2 and p3.
 const ARROW_2_LEFT_PCT = 84;
 
 // === Phase 6 / 7 layout knobs ===
-// p4's horizontal position in the stage (% of stage width). After camera
-// pan stage 3 (= 3 * CAMERA_PAN_SHIFT_PCT = 84%), this places p4 dead-centre.
 const P4_LEFT_PCT = 134;
-// Third arrow's horizontal position in the stage (% of stage width).
-// Roughly mid-way between the shrunken p3 and p4.
 const ARROW_3_LEFT_PCT = 112;
 
+// === Phase 8 — cycle finale knobs ===
+// Radius of the cycle (distance from cycle center to each central circle's center).
+const CYCLE_RADIUS = 180;
+// Visual radius of each central circle (≈ half their 155px width). Used to
+// compute where the cycle arrows start and end so they touch circle edges.
+const CYCLE_CIRCLE_VISUAL_RADIUS = 78;
+// How far each curved arrow bows outward from the straight chord.
+const CYCLE_CURVE_OFFSET = 32;
+// How long the cycle formation animation runs (matches PHASE_2_TRANSITION_MS
+// for harmony with the rest of the demo's tempo).
+const PHASE_8_TRANSITION_MS = PHASE_2_TRANSITION_MS;
+// SVG canvas size for the cycle arrows. Must encompass the full cycle plus
+// arrow bow and arrowheads. (CYCLE_RADIUS + CYCLE_CIRCLE_VISUAL_RADIUS +
+// CYCLE_CURVE_OFFSET) × 2 ≈ 580; round up to 700 for safety.
+const CYCLE_SVG_SIZE = 700;
+
+// Compute a curved arrow path between two adjacent cycle positions.
+// Coordinates are centred on the cycle's centre (0,0), SVG y-down.
+function curvedArrowPath(
+  startAngleDeg: number,
+  endAngleDeg: number,
+  R: number,
+  r: number,
+  curveOffset: number,
+): string {
+  const startA = (startAngleDeg * Math.PI) / 180;
+  const endA = (endAngleDeg * Math.PI) / 180;
+  const sc = { x: R * Math.cos(startA), y: R * Math.sin(startA) };
+  const ec = { x: R * Math.cos(endA), y: R * Math.sin(endA) };
+  const dx = ec.x - sc.x;
+  const dy = ec.y - sc.y;
+  const dist = Math.sqrt(dx * dx + dy * dy);
+  const ux = dx / dist;
+  const uy = dy / dist;
+
+  const sp = { x: sc.x + r * ux, y: sc.y + r * uy };
+  const ep = { x: ec.x - r * ux, y: ec.y - r * uy };
+
+  const mid = { x: (sp.x + ep.x) / 2, y: (sp.y + ep.y) / 2 };
+  const midDist = Math.sqrt(mid.x * mid.x + mid.y * mid.y);
+  const outX = mid.x / midDist;
+  const outY = mid.y / midDist;
+  const ctrl = {
+    x: mid.x + curveOffset * outX,
+    y: mid.y + curveOffset * outY,
+  };
+
+  return `M ${sp.x.toFixed(1)} ${sp.y.toFixed(1)} Q ${ctrl.x.toFixed(1)} ${ctrl.y.toFixed(1)} ${ep.x.toFixed(1)} ${ep.y.toFixed(1)}`;
+}
+
+// The four cycle arrows — clockwise around the cycle.
+// Top = -90°, Right = 0°, Bottom = 90°, Left = 180°.
+const cycleArrowPaths = [
+  curvedArrowPath(-90,  0,   CYCLE_RADIUS, CYCLE_CIRCLE_VISUAL_RADIUS, CYCLE_CURVE_OFFSET), // top → right
+  curvedArrowPath(  0, 90,   CYCLE_RADIUS, CYCLE_CIRCLE_VISUAL_RADIUS, CYCLE_CURVE_OFFSET), // right → bottom
+  curvedArrowPath( 90, 180,  CYCLE_RADIUS, CYCLE_CIRCLE_VISUAL_RADIUS, CYCLE_CURVE_OFFSET), // bottom → left
+  curvedArrowPath(180, 270,  CYCLE_RADIUS, CYCLE_CIRCLE_VISUAL_RADIUS, CYCLE_CURVE_OFFSET), // left → top
+];
+
 export function PartnershipModel() {
-  // Phase 0 = initial (only center visible).
-  // Phase 1 = pentagon revealed (partners around center).
-  // Phase 2 = pentagon zoomed out + arrow drawn + p2 visible + camera panned.
-  // Phase 3 = Elements revealed orbiting around p2.
-  // Phase 4 = p2 (+its elements) zoomed out + arrow 2 drawn + p3 visible + camera panned further.
-  // Phase 5 = Collaborators revealed orbiting around p3.
-  // Phase 6 = p3 (+its collaborators) zoomed out + arrow 3 drawn + p4 visible + camera panned further.
-  // Phase 7 = Course attributes revealed orbiting around p4.
-  const [phase, setPhase] = useState<0 | 1 | 2 | 3 | 4 | 5 | 6 | 7>(0);
+  // Phase 0 = initial. 1 = partners. 2 = p2. 3 = p2 elements. 4 = p3.
+  // 5 = p3 collaborators. 6 = p4. 7 = p4 attributes. 8 = cycle finale.
+  const [phase, setPhase] = useState<0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8>(0);
   const [visibleCount, setVisibleCount] = useState(0);
   const [visibleSatelliteCount, setVisibleSatelliteCount] = useState(0);
   const [visibleSatelliteCount2, setVisibleSatelliteCount2] = useState(0);
   const [visibleSatelliteCount3, setVisibleSatelliteCount3] = useState(0);
-  // 0 = no pan, 1 = p2 centred, 2 = p3 centred, 3 = p4 centred.
   const [cameraStage, setCameraStage] = useState<0 | 1 | 2 | 3>(0);
 
   useEffect(() => {
@@ -133,7 +157,10 @@ export function PartnershipModel() {
       const id = setTimeout(() => setCameraStage(3), CAMERA_PAN_DELAY_MS);
       return () => clearTimeout(id);
     }
-    // Phase 3 stays at stage 1. Phase 5 stays at stage 2. Phase 7 stays at stage 3.
+    // Phase 8 brings the camera back to zero so the cycle ends up at viewport centre.
+    if (phase === 8) {
+      setCameraStage(0);
+    }
     if (phase === 0 || phase === 1) {
       setCameraStage(0);
     }
@@ -141,43 +168,39 @@ export function PartnershipModel() {
 
   const handleCenterClick = useCallback(() => {
     if (phase === 0) {
-      // Begin phase 1: reveal partners one by one.
       setPhase(1);
       setVisibleCount(0);
       for (let i = 1; i <= partners.length; i++) {
         setTimeout(() => setVisibleCount(i), i * STAGGER_MS);
       }
     } else if (phase === 1 && visibleCount === partners.length) {
-      // Advance to phase 2 — pentagon zooms out, arrow + p2 appear.
       setPhase(2);
     } else if (phase === 2 && cameraStage === 1) {
-      // Advance to phase 3 — Elements reveal around p2 one by one.
       setPhase(3);
       setVisibleSatelliteCount(0);
       for (let i = 1; i <= satellites.length; i++) {
         setTimeout(() => setVisibleSatelliteCount(i), i * STAGGER_MS);
       }
     } else if (phase === 3 && visibleSatelliteCount === satellites.length) {
-      // Advance to phase 4 — p2 + its elements zoom out, arrow 2 + p3 appear.
       setPhase(4);
     } else if (phase === 4 && cameraStage === 2) {
-      // Advance to phase 5 — Collaborators reveal around p3 one by one.
       setPhase(5);
       setVisibleSatelliteCount2(0);
       for (let i = 1; i <= satellites2.length; i++) {
         setTimeout(() => setVisibleSatelliteCount2(i), i * STAGGER_MS);
       }
     } else if (phase === 5 && visibleSatelliteCount2 === satellites2.length) {
-      // Advance to phase 6 — p3 + its collaborators zoom out, arrow 3 + p4 appear.
       setPhase(6);
     } else if (phase === 6 && cameraStage === 3) {
-      // Advance to phase 7 — Course attributes reveal around p4 one by one.
       setPhase(7);
       setVisibleSatelliteCount3(0);
       for (let i = 1; i <= satellites3.length; i++) {
         setTimeout(() => setVisibleSatelliteCount3(i), i * STAGGER_MS);
       }
     } else if (phase === 7 && visibleSatelliteCount3 === satellites3.length) {
+      // Advance to phase 8 — the cycle finale.
+      setPhase(8);
+    } else if (phase === 8) {
       // Loop back to the start for replay.
       setPhase(0);
       setVisibleCount(0);
@@ -185,58 +208,76 @@ export function PartnershipModel() {
       setVisibleSatelliteCount2(0);
       setVisibleSatelliteCount3(0);
     }
-    // Otherwise: ignore clicks during animations in progress.
   }, [phase, visibleCount, visibleSatelliteCount, visibleSatelliteCount2, visibleSatelliteCount3, cameraStage]);
 
   // 5 evenly distributed angles, starting at 12 o'clock and going clockwise.
   const positions = partners.map((_, i) => {
     const angle = ((-90 + i * 72) * Math.PI) / 180;
-    return {
-      x: Math.cos(angle) * RADIUS,
-      y: Math.sin(angle) * RADIUS,
-    };
+    return { x: Math.cos(angle) * RADIUS, y: Math.sin(angle) * RADIUS };
   });
-
-  // Same angular distribution for the Elements around p2.
   const satellitePositions = satellites.map((_, i) => {
     const angle = ((-90 + i * 72) * Math.PI) / 180;
-    return {
-      x: Math.cos(angle) * SATELLITE_RADIUS,
-      y: Math.sin(angle) * SATELLITE_RADIUS,
-    };
+    return { x: Math.cos(angle) * SATELLITE_RADIUS, y: Math.sin(angle) * SATELLITE_RADIUS };
   });
-
-  // Same angular distribution for the Collaborators around p3.
   const satellite2Positions = satellites2.map((_, i) => {
     const angle = ((-90 + i * 72) * Math.PI) / 180;
-    return {
-      x: Math.cos(angle) * SATELLITE_RADIUS,
-      y: Math.sin(angle) * SATELLITE_RADIUS,
-    };
+    return { x: Math.cos(angle) * SATELLITE_RADIUS, y: Math.sin(angle) * SATELLITE_RADIUS };
   });
-
-  // Same angular distribution for the Course attributes around p4.
   const satellite3Positions = satellites3.map((_, i) => {
     const angle = ((-90 + i * 72) * Math.PI) / 180;
-    return {
-      x: Math.cos(angle) * SATELLITE_RADIUS,
-      y: Math.sin(angle) * SATELLITE_RADIUS,
-    };
+    return { x: Math.cos(angle) * SATELLITE_RADIUS, y: Math.sin(angle) * SATELLITE_RADIUS };
   });
 
-  // Phase-driven visibility / scale flags.
-  const isCenterShrunk  = phase >= 2;  // original pentagon zoomed out from phase 2 onwards
-  const isP2Shrunk      = phase >= 4;  // p2's pentagon zoomed out from phase 4 onwards
-  const isP3Shrunk      = phase >= 6;  // p3's pentagon zoomed out from phase 6 onwards
-  const isArrow1Drawn   = phase >= 2;  // first arrow visible from phase 2
-  const isArrow1Small   = phase >= 3;  // first arrow shrunk from phase 3
-  const isArrow2Drawn   = phase >= 4;  // second arrow visible from phase 4
-  const isArrow2Small   = phase >= 5;  // second arrow shrunk from phase 5
-  const isArrow3Drawn   = phase >= 6;  // third arrow visible from phase 6
-  const isArrow3Small   = phase >= 7;  // third arrow shrunk from phase 7
-  const isP2Visible     = phase >= 2;  // p2 button visible / clickable
-  const isP3Visible     = phase >= 4;  // p3 button visible / clickable
-  const isP4Visible     = phase >= 6;  // p4 button visible / clickable
+  // Phase-driven flags.
+  const isPhase8       = phase === 8;
+  const isCenterShrunk = phase >= 2 && !isPhase8;
+  const isP2Shrunk     = phase >= 4 && !isPhase8;
+  const isP3Shrunk     = phase >= 6 && !isPhase8;
+  const isArrow1Drawn  = phase >= 2;
+  const isArrow1Small  = phase >= 3;
+  const isArrow2Drawn  = phase >= 4;
+  const isArrow2Small  = phase >= 5;
+  const isArrow3Drawn  = phase >= 6;
+  const isArrow3Small  = phase >= 7;
+  const isP2Visible    = phase >= 2;
+  const isP3Visible    = phase >= 4;
+  const isP4Visible    = phase >= 6;
+
+  // Cycle target transforms for the four central wrappers (when phase 8 is active).
+  // Each wrapper's anchor sits at left:X% of camera. In phase 8 the camera is at 0%,
+  // so we translate each wrapper to land at one of the four cycle positions
+  // (centred on viewport 50%, 50%).
+  //
+  //   Pentagon (left:50%)  → top    : translate3d(0,             -CYCLE_RADIUS, 0)
+  //   p2       (left:78%)  → right  : translate3d(calc(-28vw + CR), 0,           0)
+  //   p3       (left:106%) → bottom : translate3d(-56vw,           +CYCLE_RADIUS, 0)
+  //   p4       (left:134%) → left   : translate3d(calc(-84vw - CR), 0,           0)
+  const centerTransform = isPhase8
+    ? `translate3d(0, ${-CYCLE_RADIUS}px, 0) scale(1)`
+    : isCenterShrunk
+      ? `translate3d(${-PHASE_2_SHIFT_PX}px, 0, 0) scale(${PHASE_2_SCALE})`
+      : `translate3d(0, 0, 0) scale(1)`;
+
+  const p2Transform = isPhase8
+    ? `translate3d(calc(-28vw + ${CYCLE_RADIUS}px), 0, 0) scale(1)`
+    : isP2Shrunk
+      ? `translate3d(${-PHASE_2_SHIFT_PX}px, 0, 0) scale(${PHASE_2_SCALE})`
+      : `translate3d(0, 0, 0) scale(1)`;
+
+  const p3Transform = isPhase8
+    ? `translate3d(-56vw, ${CYCLE_RADIUS}px, 0) scale(1)`
+    : isP3Shrunk
+      ? `translate3d(${-PHASE_2_SHIFT_PX}px, 0, 0) scale(${PHASE_2_SCALE})`
+      : `translate3d(0, 0, 0) scale(1)`;
+
+  const p4Transform = isPhase8
+    ? `translate3d(calc(-84vw - ${CYCLE_RADIUS}px), 0, 0) scale(1)`
+    : `translate3d(0, 0, 0) scale(1)`;
+
+  // Use the slower phase-8 duration when entering or leaving the cycle so the
+  // four central wrappers glide gracefully, but keep the snappier phase-2/4/6
+  // duration for the earlier zoom-outs.
+  const centerTransition = `transform ${isPhase8 ? PHASE_8_TRANSITION_MS : PHASE_2_TRANSITION_MS}ms ease-in-out`;
 
   const hintText =
     phase === 0
@@ -267,11 +308,22 @@ export function PartnershipModel() {
       ? 'Click p4 to reveal the course attributes →'
       : phase === 7 && visibleSatelliteCount3 < satellites3.length
       ? 'Revealing…'
+      : phase === 7
+      ? 'Click p4 to see the full cycle →'
       : 'Click p4 again to replay';
+
+  // Override style for satellite fade-out during phase 8.
+  const satelliteFadeStyle = isPhase8
+    ? { opacity: 0, transition: `opacity ${PHASE_8_TRANSITION_MS}ms ease-in-out, transform ${PHASE_8_TRANSITION_MS}ms ease-in-out` }
+    : {};
+
+  // The pre-cycle arrows (1, 2, 3) all fade out simultaneously in phase 8.
+  const preArrowFadeStyle = isPhase8
+    ? { opacity: 0, transition: `opacity ${PHASE_8_TRANSITION_MS}ms ease-in-out` }
+    : { opacity: 1, transition: `opacity ${PHASE_8_TRANSITION_MS}ms ease-in-out` };
 
   return (
     <section className="relative min-h-screen w-full overflow-hidden bg-white flex flex-col">
-      {/* Header — its own row at the top. */}
       <header className="px-12 pt-8 pb-4">
         <h1 className="text-3xl md:text-4xl font-semibold text-slate-900">
           Partnership &amp; Collaboration Model
@@ -281,12 +333,9 @@ export function PartnershipModel() {
         </p>
       </header>
 
-      {/* Stage — absolute-positioned scene. */}
       <div className="flex-1 relative overflow-hidden">
 
-        {/* Camera — slides the whole scene left in stages. Stage 1 centers p2;
-            stage 2 centers p3; stage 3 centers p4. Each stage is the same
-            fixed CAMERA_PAN_SHIFT_PCT so motion feels uniform. */}
+        {/* Camera. */}
         <div
           className="absolute inset-0"
           style={{
@@ -295,24 +344,18 @@ export function PartnershipModel() {
           }}
         >
 
-        {/* Original (center) pentagon — shifts left and scales down in phase 2.
-            Uses a single `transform` (GPU-accelerated) so the slide + shrink
-            stay perfectly smooth instead of jumping. */}
+        {/* Original (center) pentagon. */}
         <div
           className="absolute"
           style={{
             top: '50%',
             left: '50%',
-            transform: isCenterShrunk
-              ? `translate3d(${-PHASE_2_SHIFT_PX}px, 0, 0) scale(${PHASE_2_SCALE})`
-              : `translate3d(0, 0, 0) scale(1)`,
-            transition: `transform ${PHASE_2_TRANSITION_MS}ms ease-in-out`,
+            transform: centerTransform,
+            transition: centerTransition,
             willChange: 'transform',
           }}
         >
-          {/* 0×0 pivot — children positioned relative to (0, 0). */}
           <div className="relative" style={{ width: 0, height: 0 }}>
-            {/* Partner circles — rendered before the center so the center sits on top. */}
             {partners.map((p, i) => {
               const isVisible = i < visibleCount;
               return (
@@ -326,6 +369,7 @@ export function PartnershipModel() {
                     top: positions[i].y,
                     transform: `translate(-50%, -50%) scale(${isVisible ? 1 : 0.3})`,
                     opacity: isVisible ? 1 : 0,
+                    ...satelliteFadeStyle,
                   }}
                 >
                   {p.name}
@@ -333,7 +377,7 @@ export function PartnershipModel() {
               );
             })}
 
-            {/* Center circle — clickable; drives the early phase transitions. */}
+            {/* Center circle — clickable. */}
             <button
               type="button"
               onClick={handleCenterClick}
@@ -355,7 +399,7 @@ export function PartnershipModel() {
           </div>
         </div>
 
-        {/* Arrow 1 — draws itself in phase 2, shrinks + slides left in phase 3+. */}
+        {/* Arrow 1. */}
         <div
           className="absolute pointer-events-none"
           style={{
@@ -364,22 +408,14 @@ export function PartnershipModel() {
             transform: isArrow1Small
               ? `translate(-50%, -50%) translateX(-${ARROW_PHASE_3_SHIFT_PX}px) scale(${ARROW_PHASE_3_SCALE})`
               : `translate(-50%, -50%)`,
-            transition: `transform ${ARROW_PHASE_3_TRANSITION_MS}ms ease-in-out`,
+            transition: `transform ${ARROW_PHASE_3_TRANSITION_MS}ms ease-in-out, opacity ${PHASE_8_TRANSITION_MS}ms ease-in-out`,
+            ...preArrowFadeStyle,
           }}
         >
-          <svg
-            width={ARROW_LENGTH}
-            height={24}
-            style={{ display: 'block', overflow: 'visible' }}
-          >
+          <svg width={ARROW_LENGTH} height={24} style={{ display: 'block', overflow: 'visible' }}>
             <line
-              x1={0}
-              y1={12}
-              x2={ARROW_LENGTH - 14}
-              y2={12}
-              stroke="#64748b"
-              strokeWidth={3}
-              strokeLinecap="round"
+              x1={0} y1={12} x2={ARROW_LENGTH - 14} y2={12}
+              stroke="#64748b" strokeWidth={3} strokeLinecap="round"
               strokeDasharray={ARROW_LENGTH}
               style={{
                 strokeDashoffset: isArrow1Drawn ? 0 : ARROW_LENGTH,
@@ -397,20 +433,17 @@ export function PartnershipModel() {
           </svg>
         </div>
 
-        {/* p2 + its elements pentagon — shifts left and scales down in phase 4. */}
+        {/* p2 + its elements. */}
         <div
           className="absolute"
           style={{
             top: '50%',
             left: '78%',
-            transform: isP2Shrunk
-              ? `translate3d(${-PHASE_2_SHIFT_PX}px, 0, 0) scale(${PHASE_2_SCALE})`
-              : `translate3d(0, 0, 0) scale(1)`,
-            transition: `transform ${PHASE_2_TRANSITION_MS}ms ease-in-out`,
+            transform: p2Transform,
+            transition: centerTransition,
             willChange: 'transform',
           }}
         >
-          {/* 0×0 pivot at p2's center — Elements orbit this point. */}
           <div className="relative" style={{ width: 0, height: 0 }}>
             {satellites.map((s, i) => {
               const isVisible = i < visibleSatelliteCount;
@@ -425,27 +458,21 @@ export function PartnershipModel() {
                     top: satellitePositions[i].y,
                     transform: `translate(-50%, -50%) scale(${isVisible ? 1 : 0.3})`,
                     opacity: isVisible ? 1 : 0,
+                    ...satelliteFadeStyle,
                   }}
                 >
                   {s.name}
                 </div>
               );
             })}
-
             <button
               type="button"
               onClick={handleCenterClick}
               aria-label="Reveal Elements / advance to next phase"
               className="absolute flex items-center justify-center rounded-full bg-indigo-600 text-white font-semibold text-center shadow-2xl shadow-indigo-600/40 cursor-pointer"
               style={{
-                width: 155,
-                height: 155,
-                padding: 18,
-                fontSize: 14,
-                lineHeight: 1.3,
-                left: 0,
-                top: 0,
-                border: 'none',
+                width: 155, height: 155, padding: 18, fontSize: 14, lineHeight: 1.3,
+                left: 0, top: 0, border: 'none',
                 transform: `translate(-50%, -50%) scale(${isP2Visible ? 1 : 0.3})`,
                 opacity: isP2Visible ? 1 : 0,
                 pointerEvents: isP2Visible ? 'auto' : 'none',
@@ -459,7 +486,7 @@ export function PartnershipModel() {
           </div>
         </div>
 
-        {/* Arrow 2 — between p2 and p3. Draws in phase 4, shrinks in phase 5. */}
+        {/* Arrow 2. */}
         <div
           className="absolute pointer-events-none"
           style={{
@@ -468,22 +495,14 @@ export function PartnershipModel() {
             transform: isArrow2Small
               ? `translate(-50%, -50%) translateX(-${ARROW_PHASE_3_SHIFT_PX}px) scale(${ARROW_PHASE_3_SCALE})`
               : `translate(-50%, -50%)`,
-            transition: `transform ${ARROW_PHASE_3_TRANSITION_MS}ms ease-in-out`,
+            transition: `transform ${ARROW_PHASE_3_TRANSITION_MS}ms ease-in-out, opacity ${PHASE_8_TRANSITION_MS}ms ease-in-out`,
+            ...preArrowFadeStyle,
           }}
         >
-          <svg
-            width={ARROW_LENGTH}
-            height={24}
-            style={{ display: 'block', overflow: 'visible' }}
-          >
+          <svg width={ARROW_LENGTH} height={24} style={{ display: 'block', overflow: 'visible' }}>
             <line
-              x1={0}
-              y1={12}
-              x2={ARROW_LENGTH - 14}
-              y2={12}
-              stroke="#64748b"
-              strokeWidth={3}
-              strokeLinecap="round"
+              x1={0} y1={12} x2={ARROW_LENGTH - 14} y2={12}
+              stroke="#64748b" strokeWidth={3} strokeLinecap="round"
               strokeDasharray={ARROW_LENGTH}
               style={{
                 strokeDashoffset: isArrow2Drawn ? 0 : ARROW_LENGTH,
@@ -501,16 +520,14 @@ export function PartnershipModel() {
           </svg>
         </div>
 
-        {/* p3 + its Collaborator satellites — shifts left and scales down in phase 6. */}
+        {/* p3 + its Collaborator satellites. */}
         <div
           className="absolute"
           style={{
             top: '50%',
             left: `${P3_LEFT_PCT}%`,
-            transform: isP3Shrunk
-              ? `translate3d(${-PHASE_2_SHIFT_PX}px, 0, 0) scale(${PHASE_2_SCALE})`
-              : `translate3d(0, 0, 0) scale(1)`,
-            transition: `transform ${PHASE_2_TRANSITION_MS}ms ease-in-out`,
+            transform: p3Transform,
+            transition: centerTransition,
             willChange: 'transform',
           }}
         >
@@ -528,27 +545,21 @@ export function PartnershipModel() {
                     top: satellite2Positions[i].y,
                     transform: `translate(-50%, -50%) scale(${isVisible ? 1 : 0.3})`,
                     opacity: isVisible ? 1 : 0,
+                    ...satelliteFadeStyle,
                   }}
                 >
                   {s.name}
                 </div>
               );
             })}
-
             <button
               type="button"
               onClick={handleCenterClick}
               aria-label="Reveal Collaborators / advance to next phase"
               className="absolute flex items-center justify-center rounded-full bg-violet-600 text-white font-semibold text-center shadow-2xl shadow-violet-600/40 cursor-pointer"
               style={{
-                width: 155,
-                height: 155,
-                padding: 18,
-                fontSize: 14,
-                lineHeight: 1.3,
-                left: 0,
-                top: 0,
-                border: 'none',
+                width: 155, height: 155, padding: 18, fontSize: 14, lineHeight: 1.3,
+                left: 0, top: 0, border: 'none',
                 transform: `translate(-50%, -50%) scale(${isP3Visible ? 1 : 0.3})`,
                 opacity: isP3Visible ? 1 : 0,
                 pointerEvents: isP3Visible ? 'auto' : 'none',
@@ -562,7 +573,7 @@ export function PartnershipModel() {
           </div>
         </div>
 
-        {/* Arrow 3 — between p3 and p4. Draws in phase 6, shrinks in phase 7. */}
+        {/* Arrow 3. */}
         <div
           className="absolute pointer-events-none"
           style={{
@@ -571,22 +582,14 @@ export function PartnershipModel() {
             transform: isArrow3Small
               ? `translate(-50%, -50%) translateX(-${ARROW_PHASE_3_SHIFT_PX}px) scale(${ARROW_PHASE_3_SCALE})`
               : `translate(-50%, -50%)`,
-            transition: `transform ${ARROW_PHASE_3_TRANSITION_MS}ms ease-in-out`,
+            transition: `transform ${ARROW_PHASE_3_TRANSITION_MS}ms ease-in-out, opacity ${PHASE_8_TRANSITION_MS}ms ease-in-out`,
+            ...preArrowFadeStyle,
           }}
         >
-          <svg
-            width={ARROW_LENGTH}
-            height={24}
-            style={{ display: 'block', overflow: 'visible' }}
-          >
+          <svg width={ARROW_LENGTH} height={24} style={{ display: 'block', overflow: 'visible' }}>
             <line
-              x1={0}
-              y1={12}
-              x2={ARROW_LENGTH - 14}
-              y2={12}
-              stroke="#64748b"
-              strokeWidth={3}
-              strokeLinecap="round"
+              x1={0} y1={12} x2={ARROW_LENGTH - 14} y2={12}
+              stroke="#64748b" strokeWidth={3} strokeLinecap="round"
               strokeDasharray={ARROW_LENGTH}
               style={{
                 strokeDashoffset: isArrow3Drawn ? 0 : ARROW_LENGTH,
@@ -604,13 +607,15 @@ export function PartnershipModel() {
           </svg>
         </div>
 
-        {/* p4 + its Course-attribute satellites — eLearning Course at the far
-            right, revealed in phases 6 and 7. */}
+        {/* p4 + its Course attributes. */}
         <div
           className="absolute"
           style={{
             top: '50%',
             left: `${P4_LEFT_PCT}%`,
+            transform: p4Transform,
+            transition: centerTransition,
+            willChange: 'transform',
           }}
         >
           <div className="relative" style={{ width: 0, height: 0 }}>
@@ -627,27 +632,21 @@ export function PartnershipModel() {
                     top: satellite3Positions[i].y,
                     transform: `translate(-50%, -50%) scale(${isVisible ? 1 : 0.3})`,
                     opacity: isVisible ? 1 : 0,
+                    ...satelliteFadeStyle,
                   }}
                 >
                   {s.name}
                 </div>
               );
             })}
-
             <button
               type="button"
               onClick={handleCenterClick}
-              aria-label="Reveal eLearning Course attributes"
+              aria-label="Reveal eLearning Course attributes / replay"
               className="absolute flex items-center justify-center rounded-full bg-rose-600 text-white font-semibold text-center shadow-2xl shadow-rose-600/40 cursor-pointer"
               style={{
-                width: 155,
-                height: 155,
-                padding: 18,
-                fontSize: 14,
-                lineHeight: 1.3,
-                left: 0,
-                top: 0,
-                border: 'none',
+                width: 155, height: 155, padding: 18, fontSize: 14, lineHeight: 1.3,
+                left: 0, top: 0, border: 'none',
                 transform: `translate(-50%, -50%) scale(${isP4Visible ? 1 : 0.3})`,
                 opacity: isP4Visible ? 1 : 0,
                 pointerEvents: isP4Visible ? 'auto' : 'none',
@@ -660,10 +659,56 @@ export function PartnershipModel() {
             </button>
           </div>
         </div>
+
+        {/* Cycle arrows — four curved paths forming a clockwise loop.
+            Sit at viewport centre (matching the cycle layout) and fade in
+            during phase 8 only. */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            opacity: isPhase8 ? 1 : 0,
+            transition: `opacity ${PHASE_8_TRANSITION_MS}ms ease-in-out`,
+          }}
+        >
+          <svg
+            width={CYCLE_SVG_SIZE}
+            height={CYCLE_SVG_SIZE}
+            viewBox={`-${CYCLE_SVG_SIZE / 2} -${CYCLE_SVG_SIZE / 2} ${CYCLE_SVG_SIZE} ${CYCLE_SVG_SIZE}`}
+            style={{ display: 'block', overflow: 'visible' }}
+          >
+            <defs>
+              <marker
+                id="cycle-arrowhead"
+                viewBox="0 0 10 10"
+                refX="9"
+                refY="5"
+                markerWidth="6"
+                markerHeight="6"
+                orient="auto"
+              >
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b" />
+              </marker>
+            </defs>
+            {cycleArrowPaths.map((d, i) => (
+              <path
+                key={i}
+                d={d}
+                stroke="#64748b"
+                strokeWidth={3}
+                fill="none"
+                strokeLinecap="round"
+                markerEnd="url(#cycle-arrowhead)"
+              />
+            ))}
+          </svg>
+        </div>
+
         </div>
       </div>
 
-      {/* Hint — its own row at the bottom. */}
       <footer className="pb-8 text-center">
         <p className="text-sm text-slate-400">{hintText}</p>
       </footer>
