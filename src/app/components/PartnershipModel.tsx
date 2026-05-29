@@ -29,9 +29,9 @@ const satellites: Partner[] = [
 // Solution Design). The five collaborators contributing to the design.
 const satellites2: Partner[] = [
   { name: 'University Professors',  bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
-  { name: 'Experienced Teachers',   bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
+  { name: 'Teachers',   bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
   { name: 'Learning Designers',     bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
-  { name: 'Multimedia Teams',       bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
+  { name: 'Creative Directors',       bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
   { name: 'Integrators',            bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
 ];
 
