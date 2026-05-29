@@ -16,16 +16,17 @@ const partners: Partner[] = [
   { name: 'Research Institutes',  bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
 ];
 
-// Phase 3 satellites — orbit around p2 (Professional Learning Intelligence).
+// Phase 3 satellites — orbit around p2 (Contextual Intelligence).
 const satellites: Partner[] = [
-  { name: 'Recurring Patterns',            bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
-  { name: 'Urgent Needs',            bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
-  { name: 'Intervention Areas',            bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
-  { name: 'Emerging Phenomena',            bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
-  { name: 'Emotional Struggles',            bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
+  { name: 'Recurring Patterns',   bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
+  { name: 'Urgent Needs',         bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
+  { name: 'Intervention Areas',   bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
+  { name: 'Emerging Phenomena',   bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
+  { name: 'Emotional Struggles',  bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
 ];
 
-// Phase 5 satellites — orbit around p3. PLACEHOLDER NAMES — rename to taste.
+// Phase 5 satellites — orbit around p3 (Participatory Professional Learning
+// Solution Design). PLACEHOLDER NAMES — rename to taste.
 const satellites2: Partner[] = [
   { name: 'Insight 1',            bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
   { name: 'Insight 2',            bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
@@ -36,7 +37,7 @@ const satellites2: Partner[] = [
 
 // === Phase 1 knobs ===
 // Distance from center to each partner circle's center, in pixels.
-const RADIUS = 260;
+const RADIUS = 200;
 // Stagger between each partner appearing, in ms.
 const STAGGER_MS = 180;
 
@@ -69,7 +70,7 @@ const CAMERA_PAN_SHIFT_PCT = 28;                        // how far the scene sli
 
 // === Phase 3 knobs ===
 // Distance from p2's center to each Element's center, in pixels.
-const SATELLITE_RADIUS = 260;
+const SATELLITE_RADIUS = 200;
 // When phase 3 starts (click on p2), arrow 1 shrinks and slides slightly
 // to the left to make visual room for the Elements appearing around p2.
 // The same shrink+shift is reused for arrow 2 in phase 5.
@@ -263,8 +264,8 @@ export function PartnershipModel() {
                   key={p.name}
                   className={`absolute flex items-center justify-center rounded-full text-white font-semibold text-sm md:text-base text-center shadow-xl transition-all duration-500 ease-out ${p.bg} ${p.shadow}`}
                   style={{
-                    width: 144,
-                    height: 144,
+                    width: 110,
+                    height: 110,
                     left: positions[i].x,
                     top: positions[i].y,
                     transform: `translate(-50%, -50%) scale(${isVisible ? 1 : 0.3})`,
@@ -283,8 +284,8 @@ export function PartnershipModel() {
               aria-label="Advance presentation"
               className="absolute flex items-center justify-center rounded-full bg-slate-900 text-white font-semibold text-xl md:text-2xl shadow-2xl shadow-slate-900/30 cursor-pointer transition-transform duration-200 hover:scale-105 active:scale-95"
               style={{
-                width: 220,
-                height: 220,
+                width: 170,
+                height: 170,
                 left: 0,
                 top: 0,
                 transform: 'translate(-50%, -50%)',
@@ -365,8 +366,8 @@ export function PartnershipModel() {
                   key={s.name}
                   className={`absolute flex items-center justify-center rounded-full text-white font-semibold text-sm md:text-base text-center shadow-xl transition-all duration-500 ease-out ${s.bg} ${s.shadow}`}
                   style={{
-                    width: 144,
-                    height: 144,
+                    width: 110,
+                    height: 110,
                     left: satellitePositions[i].x,
                     top: satellitePositions[i].y,
                     transform: `translate(-50%, -50%) scale(${isVisible ? 1 : 0.3})`,
@@ -385,8 +386,8 @@ export function PartnershipModel() {
               aria-label="Reveal Elements / advance to next phase"
               className="absolute flex items-center justify-center rounded-full bg-indigo-600 text-white font-semibold text-center shadow-2xl shadow-indigo-600/40 cursor-pointer"
               style={{
-                width: 200,
-                height: 200,
+                width: 155,
+                height: 155,
                 padding: 18,
                 fontSize: 14,
                 lineHeight: 1.3,
@@ -468,8 +469,8 @@ export function PartnershipModel() {
                   key={s.name}
                   className={`absolute flex items-center justify-center rounded-full text-white font-semibold text-sm md:text-base text-center shadow-xl transition-all duration-500 ease-out ${s.bg} ${s.shadow}`}
                   style={{
-                    width: 144,
-                    height: 144,
+                    width: 110,
+                    height: 110,
                     left: satellite2Positions[i].x,
                     top: satellite2Positions[i].y,
                     transform: `translate(-50%, -50%) scale(${isVisible ? 1 : 0.3})`,
@@ -488,8 +489,8 @@ export function PartnershipModel() {
               aria-label="Reveal Insights around p3"
               className="absolute flex items-center justify-center rounded-full bg-violet-600 text-white font-semibold text-center shadow-2xl shadow-violet-600/40 cursor-pointer"
               style={{
-                width: 200,
-                height: 200,
+                width: 155,
+                height: 155,
                 padding: 18,
                 fontSize: 14,
                 lineHeight: 1.3,
