@@ -282,20 +282,19 @@ export function PartnershipModel() {
               type="button"
               onClick={handleCenterClick}
               aria-label="Advance presentation"
-              className="absolute flex items-center justify-center rounded-full bg-slate-900 text-white font-semibold text-xl md:text-2xl shadow-2xl shadow-slate-900/30 cursor-pointer transition-transform duration-200 hover:scale-105 active:scale-95"
+              className="absolute flex items-center justify-center rounded-full bg-slate-900 text-white font-semibold text-center shadow-2xl shadow-slate-900/30 cursor-pointer transition-transform duration-200 hover:scale-105 active:scale-95"
               style={{
                 width: 170,
                 height: 170,
                 left: 0,
                 top: 0,
+                padding: 18,
+                fontSize: 14,
+                lineHeight: 1.3,
                 transform: 'translate(-50%, -50%)',
               }}
             >
-              <span className="text-center leading-tight">
-                Structured
-                <br />
-                Discovery Framework
-              </span>
+              Structured Discovery Framework
             </button>
           </div>
         </div>
