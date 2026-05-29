@@ -35,7 +35,7 @@ const satellites2: Partner[] = [
   { name: 'Integrators',            bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
 ];
 
-// Phase 7 satellites — orbit around p4 (eLearning Course).
+// Phase 7 satellites — orbit around p4 (eLearning Solution).
 const satellites3: Partner[] = [
   { name: 'Scenario-driven',        bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
   { name: 'Immersive',              bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
