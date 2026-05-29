@@ -26,13 +26,13 @@ const satellites: Partner[] = [
 ];
 
 // Phase 5 satellites — orbit around p3 (Participatory Professional Learning
-// Solution Design). PLACEHOLDER NAMES — rename to taste.
+// Solution Design). The five collaborators contributing to the design.
 const satellites2: Partner[] = [
-  { name: 'Insight 1',            bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
-  { name: 'Insight 2',            bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
-  { name: 'Insight 3',            bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
-  { name: 'Insight 4',            bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
-  { name: 'Insight 5',            bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
+  { name: 'University Professors',  bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
+  { name: 'Experienced Teachers',   bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
+  { name: 'Learning Designers',     bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
+  { name: 'Multimedia Teams',       bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
+  { name: 'Integrators',            bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
 ];
 
 // === Phase 1 knobs ===
