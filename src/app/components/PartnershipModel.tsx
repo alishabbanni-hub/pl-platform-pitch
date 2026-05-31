@@ -63,16 +63,24 @@ const ARROW_3_LEFT_PCT = 112;
 // === Phase 8 — cycle finale knobs ===
 const CYCLE_RADIUS = 180;
 const CYCLE_CIRCLE_VISUAL_RADIUS = 78;
-const CYCLE_CURVE_OFFSET = 32;
+// Gap between each cycle arrow and the circles it connects.
+const CYCLE_ARROW_GAP_PX = 18;
+// Sagitta (height of arc bow above the chord). Bigger = more pronounced curve.
+const CYCLE_ARROW_SAGITTA = 16;
 const PHASE_8_TRANSITION_MS = PHASE_2_TRANSITION_MS;
 const CYCLE_SVG_SIZE = 700;
 
+const CYCLE_ARROW_START_R = CYCLE_CIRCLE_VISUAL_RADIUS + CYCLE_ARROW_GAP_PX;
+
+// Build a smooth circular-arc path from one cycle slot to the next.
+// We use SVG's A (arc) command rather than a quadratic Bézier so the
+// curvature is constant along the arrow — the smoothest possible bend.
 function curvedArrowPath(
   startAngleDeg: number,
   endAngleDeg: number,
   R: number,
   r: number,
-  curveOffset: number,
+  sagitta: number,
 ): string {
   const startA = (startAngleDeg * Math.PI) / 180;
   const endA = (endAngleDeg * Math.PI) / 180;
@@ -85,19 +93,20 @@ function curvedArrowPath(
   const uy = dy / dist;
   const sp = { x: sc.x + r * ux, y: sc.y + r * uy };
   const ep = { x: ec.x - r * ux, y: ec.y - r * uy };
-  const mid = { x: (sp.x + ep.x) / 2, y: (sp.y + ep.y) / 2 };
-  const midDist = Math.sqrt(mid.x * mid.x + mid.y * mid.y);
-  const outX = mid.x / midDist;
-  const outY = mid.y / midDist;
-  const ctrl = { x: mid.x + curveOffset * outX, y: mid.y + curveOffset * outY };
-  return `M ${sp.x.toFixed(1)} ${sp.y.toFixed(1)} Q ${ctrl.x.toFixed(1)} ${ctrl.y.toFixed(1)} ${ep.x.toFixed(1)} ${ep.y.toFixed(1)}`;
+
+  // Arc radius derived from chord length and desired sagitta.
+  const chord = Math.sqrt((ep.x - sp.x) ** 2 + (ep.y - sp.y) ** 2);
+  const arcR = (chord * chord) / (8 * sagitta) + sagitta / 2;
+
+  // sweep-flag = 1 → arc bows outward (away from cycle center) for clockwise traversal.
+  return `M ${sp.x.toFixed(1)} ${sp.y.toFixed(1)} A ${arcR.toFixed(1)} ${arcR.toFixed(1)} 0 0 1 ${ep.x.toFixed(1)} ${ep.y.toFixed(1)}`;
 }
 
 const cycleArrowPaths = [
-  curvedArrowPath(-90,  0,   CYCLE_RADIUS, CYCLE_CIRCLE_VISUAL_RADIUS, CYCLE_CURVE_OFFSET),
-  curvedArrowPath(  0, 90,   CYCLE_RADIUS, CYCLE_CIRCLE_VISUAL_RADIUS, CYCLE_CURVE_OFFSET),
-  curvedArrowPath( 90, 180,  CYCLE_RADIUS, CYCLE_CIRCLE_VISUAL_RADIUS, CYCLE_CURVE_OFFSET),
-  curvedArrowPath(180, 270,  CYCLE_RADIUS, CYCLE_CIRCLE_VISUAL_RADIUS, CYCLE_CURVE_OFFSET),
+  curvedArrowPath(-90,  0,   CYCLE_RADIUS, CYCLE_ARROW_START_R, CYCLE_ARROW_SAGITTA),
+  curvedArrowPath(  0, 90,   CYCLE_RADIUS, CYCLE_ARROW_START_R, CYCLE_ARROW_SAGITTA),
+  curvedArrowPath( 90, 180,  CYCLE_RADIUS, CYCLE_ARROW_START_R, CYCLE_ARROW_SAGITTA),
+  curvedArrowPath(180, 270,  CYCLE_RADIUS, CYCLE_ARROW_START_R, CYCLE_ARROW_SAGITTA),
 ];
 
 export function PartnershipModel() {
@@ -188,7 +197,7 @@ export function PartnershipModel() {
     return { x: Math.cos(angle) * SATELLITE_RADIUS, y: Math.sin(angle) * SATELLITE_RADIUS };
   });
 
-  const isPhase8       = phase === 8;
+  const isPhase8 = phase === 8;
   const isCenterShrunk = phase >= 2 && !isPhase8;
   const isP2Shrunk     = phase >= 4 && !isPhase8;
   const isP3Shrunk     = phase >= 6 && !isPhase8;
@@ -256,7 +265,7 @@ export function PartnershipModel() {
       : phase === 6 && cameraStage !== 3
       ? 'Revealing…'
       : phase === 6
-      ? 'Click p4 to reveal the course attributes →'
+      ? 'Click p4 to reveal the solution attributes →'
       : phase === 7 && visibleSatelliteCount3 < satellites3.length
       ? 'Revealing…'
       : phase === 7
@@ -544,7 +553,7 @@ export function PartnershipModel() {
             </svg>
           </div>
 
-          {/* p4 + its course attributes */}
+          {/* p4 + its solution attributes */}
           <div
             className="absolute"
             style={{
@@ -579,7 +588,7 @@ export function PartnershipModel() {
               <button
                 type="button"
                 onClick={handleCenterClick}
-                aria-label="Reveal eLearning Course attributes / replay"
+                aria-label="Reveal eLearning Solution attributes / replay"
                 className="absolute flex items-center justify-center rounded-full bg-rose-600 text-white font-semibold text-center shadow-2xl shadow-rose-600/40 cursor-pointer"
                 style={{
                   width: 155, height: 155, padding: 18, fontSize: 14, lineHeight: 1.3,
@@ -592,12 +601,12 @@ export function PartnershipModel() {
                     `transform 500ms ease-out ${ARROW_DRAW_MS + CIRCLE_DELAY_AFTER_ARROW_MS}ms`,
                 }}
               >
-                eLearning Course
+                eLearning Solution
               </button>
             </div>
           </div>
 
-          {/* Cycle arrows — four curved paths forming a clockwise loop. */}
+          {/* Cycle arrows — four smooth circular arcs forming a clockwise loop. */}
           <div
             className="absolute pointer-events-none"
             style={{
