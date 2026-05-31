@@ -66,9 +66,10 @@ const CYCLE_CIRCLE_VISUAL_RADIUS = 78;
 // Gap between each cycle arrow and the circles it connects.
 const CYCLE_ARROW_GAP_PX = 18;
 // Sagitta (height of arc bow above the chord). Bigger = more pronounced curve.
-const CYCLE_ARROW_SAGITTA = 24;
-// Color of the cycle arrows. Dark slate to match the bold reference style.
-const CYCLE_ARROW_COLOR = '#1e293b';
+// Set high to match the bold, sweeping arcs in the reference image.
+const CYCLE_ARROW_SAGITTA = 55;
+// Color of the cycle arrows. Near-black to match the bold reference style.
+const CYCLE_ARROW_COLOR = '#0f172a';
 const CYCLE_ARROW_STROKE_WIDTH = 3;
 const PHASE_8_TRANSITION_MS = PHASE_2_TRANSITION_MS;
 const CYCLE_SVG_SIZE = 700;
