@@ -63,13 +63,9 @@ const ARROW_3_LEFT_PCT = 112;
 // === Phase 8 — cycle finale knobs ===
 const CYCLE_RADIUS = 180;
 const CYCLE_CIRCLE_VISUAL_RADIUS = 78;
-// Extra distance the arrows keep away from each circle's edge so they don't touch.
-const CYCLE_ARROW_GAP_PX = 18;
 const CYCLE_CURVE_OFFSET = 32;
 const PHASE_8_TRANSITION_MS = PHASE_2_TRANSITION_MS;
 const CYCLE_SVG_SIZE = 700;
-// Stagger between each central circle arriving at its cycle position.
-const CYCLE_STEP_INTERVAL_MS = 1000;
 
 function curvedArrowPath(
   startAngleDeg: number,
@@ -97,15 +93,11 @@ function curvedArrowPath(
   return `M ${sp.x.toFixed(1)} ${sp.y.toFixed(1)} Q ${ctrl.x.toFixed(1)} ${ctrl.y.toFixed(1)} ${ep.x.toFixed(1)} ${ep.y.toFixed(1)}`;
 }
 
-// The arrow's effective starting radius is the circle's visual radius PLUS
-// a gap so the arrow leaves a small clear space and never touches the circles.
-const CYCLE_ARROW_START_R = CYCLE_CIRCLE_VISUAL_RADIUS + CYCLE_ARROW_GAP_PX;
-
 const cycleArrowPaths = [
-  curvedArrowPath(-90,  0,   CYCLE_RADIUS, CYCLE_ARROW_START_R, CYCLE_CURVE_OFFSET),
-  curvedArrowPath(  0, 90,   CYCLE_RADIUS, CYCLE_ARROW_START_R, CYCLE_CURVE_OFFSET),
-  curvedArrowPath( 90, 180,  CYCLE_RADIUS, CYCLE_ARROW_START_R, CYCLE_CURVE_OFFSET),
-  curvedArrowPath(180, 270,  CYCLE_RADIUS, CYCLE_ARROW_START_R, CYCLE_CURVE_OFFSET),
+  curvedArrowPath(-90,  0,   CYCLE_RADIUS, CYCLE_CIRCLE_VISUAL_RADIUS, CYCLE_CURVE_OFFSET),
+  curvedArrowPath(  0, 90,   CYCLE_RADIUS, CYCLE_CIRCLE_VISUAL_RADIUS, CYCLE_CURVE_OFFSET),
+  curvedArrowPath( 90, 180,  CYCLE_RADIUS, CYCLE_CIRCLE_VISUAL_RADIUS, CYCLE_CURVE_OFFSET),
+  curvedArrowPath(180, 270,  CYCLE_RADIUS, CYCLE_CIRCLE_VISUAL_RADIUS, CYCLE_CURVE_OFFSET),
 ];
 
 export function PartnershipModel() {
@@ -115,9 +107,6 @@ export function PartnershipModel() {
   const [visibleSatelliteCount2, setVisibleSatelliteCount2] = useState(0);
   const [visibleSatelliteCount3, setVisibleSatelliteCount3] = useState(0);
   const [cameraStage, setCameraStage] = useState<0 | 1 | 2 | 3>(0);
-  // cycleStep counts how many central circles have moved into their cycle slot
-  // during phase 8 (0 = none yet, 4 = all four in place).
-  const [cycleStep, setCycleStep] = useState(0);
 
   useEffect(() => {
     if (phase === 2) {
@@ -138,20 +127,6 @@ export function PartnershipModel() {
     if (phase === 0 || phase === 1) {
       setCameraStage(0);
     }
-  }, [phase]);
-
-  // Phase 8: stagger each central circle's arrival at its cycle position.
-  useEffect(() => {
-    if (phase === 8) {
-      setCycleStep(1); // Pentagon starts moving immediately.
-      const timers: ReturnType<typeof setTimeout>[] = [
-        setTimeout(() => setCycleStep(2), CYCLE_STEP_INTERVAL_MS),
-        setTimeout(() => setCycleStep(3), 2 * CYCLE_STEP_INTERVAL_MS),
-        setTimeout(() => setCycleStep(4), 3 * CYCLE_STEP_INTERVAL_MS),
-      ];
-      return () => timers.forEach(clearTimeout);
-    }
-    setCycleStep(0);
   }, [phase]);
 
   const handleCenterClick = useCallback(() => {
@@ -213,46 +188,39 @@ export function PartnershipModel() {
     return { x: Math.cos(angle) * SATELLITE_RADIUS, y: Math.sin(angle) * SATELLITE_RADIUS };
   });
 
-  const isPhase8 = phase === 8;
-  // Per-circle "in cycle position" flags driven by cycleStep.
-  const isCenterInCycle = isPhase8 && cycleStep >= 1;
-  const isP2InCycle     = isPhase8 && cycleStep >= 2;
-  const isP3InCycle     = isPhase8 && cycleStep >= 3;
-  const isP4InCycle     = isPhase8 && cycleStep >= 4;
+  const isPhase8       = phase === 8;
+  const isCenterShrunk = phase >= 2 && !isPhase8;
+  const isP2Shrunk     = phase >= 4 && !isPhase8;
+  const isP3Shrunk     = phase >= 6 && !isPhase8;
+  const isArrow1Drawn  = phase >= 2;
+  const isArrow1Small  = phase >= 3;
+  const isArrow2Drawn  = phase >= 4;
+  const isArrow2Small  = phase >= 5;
+  const isArrow3Drawn  = phase >= 6;
+  const isArrow3Small  = phase >= 7;
+  const isP2Visible    = phase >= 2;
+  const isP3Visible    = phase >= 4;
+  const isP4Visible    = phase >= 6;
 
-  const isCenterShrunk = phase >= 2 && !isCenterInCycle;
-  const isP2Shrunk     = phase >= 4 && !isP2InCycle;
-  const isP3Shrunk     = phase >= 6 && !isP3InCycle;
-
-  const isArrow1Drawn = phase >= 2;
-  const isArrow1Small = phase >= 3;
-  const isArrow2Drawn = phase >= 4;
-  const isArrow2Small = phase >= 5;
-  const isArrow3Drawn = phase >= 6;
-  const isArrow3Small = phase >= 7;
-  const isP2Visible   = phase >= 2;
-  const isP3Visible   = phase >= 4;
-  const isP4Visible   = phase >= 6;
-
-  const centerTransform = isCenterInCycle
+  const centerTransform = isPhase8
     ? `translate3d(0, ${-CYCLE_RADIUS}px, 0) scale(1)`
     : isCenterShrunk
       ? `translate3d(${-PHASE_2_SHIFT_PX}px, 0, 0) scale(${PHASE_2_SCALE})`
       : `translate3d(0, 0, 0) scale(1)`;
 
-  const p2Transform = isP2InCycle
+  const p2Transform = isPhase8
     ? `translate3d(calc(-28vw + ${CYCLE_RADIUS}px), 0, 0) scale(1)`
     : isP2Shrunk
       ? `translate3d(${-PHASE_2_SHIFT_PX}px, 0, 0) scale(${PHASE_2_SCALE})`
       : `translate3d(0, 0, 0) scale(1)`;
 
-  const p3Transform = isP3InCycle
+  const p3Transform = isPhase8
     ? `translate3d(-56vw, ${CYCLE_RADIUS}px, 0) scale(1)`
     : isP3Shrunk
       ? `translate3d(${-PHASE_2_SHIFT_PX}px, 0, 0) scale(${PHASE_2_SCALE})`
       : `translate3d(0, 0, 0) scale(1)`;
 
-  const p4Transform = isP4InCycle
+  const p4Transform = isPhase8
     ? `translate3d(calc(-84vw - ${CYCLE_RADIUS}px), 0, 0) scale(1)`
     : `translate3d(0, 0, 0) scale(1)`;
 
@@ -261,11 +229,6 @@ export function PartnershipModel() {
   const satelliteTransition = isPhase8
     ? `opacity ${PHASE_8_TRANSITION_MS}ms ease-in-out, transform ${PHASE_8_TRANSITION_MS}ms ease-in-out`
     : undefined;
-
-  // Cycle arrow visibility — each arrow needs both its endpoints to have
-  // arrived at their cycle slots. Arrows in order: Pentagon→p2, p2→p3,
-  // p3→p4, p4→Pentagon. The last one needs cycleStep≥4 (both p4 and Pentagon).
-  const cycleArrowVisibleAtStep = [2, 3, 4, 4];
 
   const hintText =
     phase === 0
@@ -293,7 +256,7 @@ export function PartnershipModel() {
       : phase === 6 && cameraStage !== 3
       ? 'Revealing…'
       : phase === 6
-      ? 'Click p4 to reveal the solution attributes →'
+      ? 'Click p4 to reveal the course attributes →'
       : phase === 7 && visibleSatelliteCount3 < satellites3.length
       ? 'Revealing…'
       : phase === 7
@@ -334,7 +297,6 @@ export function PartnershipModel() {
             <div className="relative" style={{ width: 0, height: 0 }}>
               {partners.map((p, i) => {
                 const isVisible = i < visibleCount;
-                const faded = isPhase8 && cycleStep >= 1;
                 return (
                   <div
                     key={p.name}
@@ -345,7 +307,7 @@ export function PartnershipModel() {
                       left: positions[i].x,
                       top: positions[i].y,
                       transform: `translate(-50%, -50%) scale(${isVisible ? 1 : 0.3})`,
-                      opacity: faded ? 0 : isVisible ? 1 : 0,
+                      opacity: isPhase8 ? 0 : isVisible ? 1 : 0,
                       transition: satelliteTransition,
                     }}
                   >
@@ -383,7 +345,7 @@ export function PartnershipModel() {
               transform: isArrow1Small
                 ? `translate(-50%, -50%) translateX(-${ARROW_PHASE_3_SHIFT_PX}px) scale(${ARROW_PHASE_3_SCALE})`
                 : `translate(-50%, -50%)`,
-              opacity: isPhase8 && cycleStep >= 1 ? 0 : 1,
+              opacity: isPhase8 ? 0 : 1,
               transition: `transform ${ARROW_PHASE_3_TRANSITION_MS}ms ease-in-out, opacity ${PHASE_8_TRANSITION_MS}ms ease-in-out`,
             }}
           >
@@ -422,7 +384,6 @@ export function PartnershipModel() {
             <div className="relative" style={{ width: 0, height: 0 }}>
               {satellites.map((s, i) => {
                 const isVisible = i < visibleSatelliteCount;
-                const faded = isPhase8 && cycleStep >= 2;
                 return (
                   <div
                     key={s.name}
@@ -433,7 +394,7 @@ export function PartnershipModel() {
                       left: satellitePositions[i].x,
                       top: satellitePositions[i].y,
                       transform: `translate(-50%, -50%) scale(${isVisible ? 1 : 0.3})`,
-                      opacity: faded ? 0 : isVisible ? 1 : 0,
+                      opacity: isPhase8 ? 0 : isVisible ? 1 : 0,
                       transition: satelliteTransition,
                     }}
                   >
@@ -471,7 +432,7 @@ export function PartnershipModel() {
               transform: isArrow2Small
                 ? `translate(-50%, -50%) translateX(-${ARROW_PHASE_3_SHIFT_PX}px) scale(${ARROW_PHASE_3_SCALE})`
                 : `translate(-50%, -50%)`,
-              opacity: isPhase8 && cycleStep >= 2 ? 0 : 1,
+              opacity: isPhase8 ? 0 : 1,
               transition: `transform ${ARROW_PHASE_3_TRANSITION_MS}ms ease-in-out, opacity ${PHASE_8_TRANSITION_MS}ms ease-in-out`,
             }}
           >
@@ -510,7 +471,6 @@ export function PartnershipModel() {
             <div className="relative" style={{ width: 0, height: 0 }}>
               {satellites2.map((s, i) => {
                 const isVisible = i < visibleSatelliteCount2;
-                const faded = isPhase8 && cycleStep >= 3;
                 return (
                   <div
                     key={s.name}
@@ -521,7 +481,7 @@ export function PartnershipModel() {
                       left: satellite2Positions[i].x,
                       top: satellite2Positions[i].y,
                       transform: `translate(-50%, -50%) scale(${isVisible ? 1 : 0.3})`,
-                      opacity: faded ? 0 : isVisible ? 1 : 0,
+                      opacity: isPhase8 ? 0 : isVisible ? 1 : 0,
                       transition: satelliteTransition,
                     }}
                   >
@@ -559,7 +519,7 @@ export function PartnershipModel() {
               transform: isArrow3Small
                 ? `translate(-50%, -50%) translateX(-${ARROW_PHASE_3_SHIFT_PX}px) scale(${ARROW_PHASE_3_SCALE})`
                 : `translate(-50%, -50%)`,
-              opacity: isPhase8 && cycleStep >= 3 ? 0 : 1,
+              opacity: isPhase8 ? 0 : 1,
               transition: `transform ${ARROW_PHASE_3_TRANSITION_MS}ms ease-in-out, opacity ${PHASE_8_TRANSITION_MS}ms ease-in-out`,
             }}
           >
@@ -584,7 +544,7 @@ export function PartnershipModel() {
             </svg>
           </div>
 
-          {/* p4 + its solution attributes */}
+          {/* p4 + its course attributes */}
           <div
             className="absolute"
             style={{
@@ -598,7 +558,6 @@ export function PartnershipModel() {
             <div className="relative" style={{ width: 0, height: 0 }}>
               {satellites3.map((s, i) => {
                 const isVisible = i < visibleSatelliteCount3;
-                const faded = isPhase8 && cycleStep >= 4;
                 return (
                   <div
                     key={s.name}
@@ -609,7 +568,7 @@ export function PartnershipModel() {
                       left: satellite3Positions[i].x,
                       top: satellite3Positions[i].y,
                       transform: `translate(-50%, -50%) scale(${isVisible ? 1 : 0.3})`,
-                      opacity: faded ? 0 : isVisible ? 1 : 0,
+                      opacity: isPhase8 ? 0 : isVisible ? 1 : 0,
                       transition: satelliteTransition,
                     }}
                   >
@@ -620,7 +579,7 @@ export function PartnershipModel() {
               <button
                 type="button"
                 onClick={handleCenterClick}
-                aria-label="Reveal eLearning Solution attributes / replay"
+                aria-label="Reveal eLearning Course attributes / replay"
                 className="absolute flex items-center justify-center rounded-full bg-rose-600 text-white font-semibold text-center shadow-2xl shadow-rose-600/40 cursor-pointer"
                 style={{
                   width: 155, height: 155, padding: 18, fontSize: 14, lineHeight: 1.3,
@@ -633,14 +592,12 @@ export function PartnershipModel() {
                     `transform 500ms ease-out ${ARROW_DRAW_MS + CIRCLE_DELAY_AFTER_ARROW_MS}ms`,
                 }}
               >
-                eLearning Solution
+                eLearning Course
               </button>
             </div>
           </div>
 
-          {/* Cycle arrows — four curved paths forming a clockwise loop.
-              Each arrow appears when both of its endpoints have arrived at
-              their cycle slots. */}
+          {/* Cycle arrows — four curved paths forming a clockwise loop. */}
           <div
             className="absolute pointer-events-none"
             style={{
@@ -670,24 +627,17 @@ export function PartnershipModel() {
                   <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b" />
                 </marker>
               </defs>
-              {cycleArrowPaths.map((d, i) => {
-                const visible = cycleStep >= cycleArrowVisibleAtStep[i];
-                return (
-                  <path
-                    key={i}
-                    d={d}
-                    stroke="#64748b"
-                    strokeWidth={3}
-                    fill="none"
-                    strokeLinecap="round"
-                    markerEnd="url(#cycle-arrowhead)"
-                    style={{
-                      opacity: visible ? 1 : 0,
-                      transition: `opacity ${PHASE_8_TRANSITION_MS}ms ease-in-out`,
-                    }}
-                  />
-                );
-              })}
+              {cycleArrowPaths.map((d, i) => (
+                <path
+                  key={i}
+                  d={d}
+                  stroke="#64748b"
+                  strokeWidth={3}
+                  fill="none"
+                  strokeLinecap="round"
+                  markerEnd="url(#cycle-arrowhead)"
+                />
+              ))}
             </svg>
           </div>
 
