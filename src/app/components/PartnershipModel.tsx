@@ -66,7 +66,10 @@ const CYCLE_CIRCLE_VISUAL_RADIUS = 78;
 // Gap between each cycle arrow and the circles it connects.
 const CYCLE_ARROW_GAP_PX = 18;
 // Sagitta (height of arc bow above the chord). Bigger = more pronounced curve.
-const CYCLE_ARROW_SAGITTA = 16;
+const CYCLE_ARROW_SAGITTA = 24;
+// Color of the cycle arrows. Dark slate to match the bold reference style.
+const CYCLE_ARROW_COLOR = '#1e293b';
+const CYCLE_ARROW_STROKE_WIDTH = 3;
 const PHASE_8_TRANSITION_MS = PHASE_2_TRANSITION_MS;
 const CYCLE_SVG_SIZE = 700;
 
@@ -633,15 +636,15 @@ export function PartnershipModel() {
                   markerHeight="6"
                   orient="auto"
                 >
-                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b" />
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill={CYCLE_ARROW_COLOR} />
                 </marker>
               </defs>
               {cycleArrowPaths.map((d, i) => (
                 <path
                   key={i}
                   d={d}
-                  stroke="#64748b"
-                  strokeWidth={3}
+                  stroke={CYCLE_ARROW_COLOR}
+                  strokeWidth={CYCLE_ARROW_STROKE_WIDTH}
                   fill="none"
                   strokeLinecap="round"
                   markerEnd="url(#cycle-arrowhead)"
