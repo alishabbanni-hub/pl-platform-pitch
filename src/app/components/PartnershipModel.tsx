@@ -312,15 +312,11 @@ export function PartnershipModel() {
       ? 'Click p4 to see the full cycle →'
       : 'Click p4 again to replay';
 
-  // Override style for satellite fade-out during phase 8.
-  const satelliteFadeStyle = isPhase8
-    ? { opacity: 0, transition: `opacity ${PHASE_8_TRANSITION_MS}ms ease-in-out, transform ${PHASE_8_TRANSITION_MS}ms ease-in-out` }
-    : {};
-
-  // The pre-cycle arrows (1, 2, 3) all fade out simultaneously in phase 8.
-  const preArrowFadeStyle = isPhase8
-    ? { opacity: 0, transition: `opacity ${PHASE_8_TRANSITION_MS}ms ease-in-out` }
-    : { opacity: 1, transition: `opacity ${PHASE_8_TRANSITION_MS}ms ease-in-out` };
+  // Single transition rule reused on every satellite. When phase 8 fires,
+  // a long fade is used; otherwise the className's transition-all takes over.
+  const satelliteTransition = isPhase8
+    ? `opacity ${PHASE_8_TRANSITION_MS}ms ease-in-out, transform ${PHASE_8_TRANSITION_MS}ms ease-in-out`
+    : undefined;
 
   return (
     <section className="relative min-h-screen w-full overflow-hidden bg-white flex flex-col">
@@ -368,8 +364,8 @@ export function PartnershipModel() {
                     left: positions[i].x,
                     top: positions[i].y,
                     transform: `translate(-50%, -50%) scale(${isVisible ? 1 : 0.3})`,
-                    opacity: isVisible ? 1 : 0,
-                    ...satelliteFadeStyle,
+                    opacity: isPhase8 ? 0 : isVisible ? 1 : 0,
+                    transition: satelliteTransition,
                   }}
                 >
                   {p.name}
@@ -408,8 +404,8 @@ export function PartnershipModel() {
             transform: isArrow1Small
               ? `translate(-50%, -50%) translateX(-${ARROW_PHASE_3_SHIFT_PX}px) scale(${ARROW_PHASE_3_SCALE})`
               : `translate(-50%, -50%)`,
+            opacity: isPhase8 ? 0 : 1,
             transition: `transform ${ARROW_PHASE_3_TRANSITION_MS}ms ease-in-out, opacity ${PHASE_8_TRANSITION_MS}ms ease-in-out`,
-            ...preArrowFadeStyle,
           }}
         >
           <svg width={ARROW_LENGTH} height={24} style={{ display: 'block', overflow: 'visible' }}>
@@ -457,8 +453,8 @@ export function PartnershipModel() {
                     left: satellitePositions[i].x,
                     top: satellitePositions[i].y,
                     transform: `translate(-50%, -50%) scale(${isVisible ? 1 : 0.3})`,
-                    opacity: isVisible ? 1 : 0,
-                    ...satelliteFadeStyle,
+                    opacity: isPhase8 ? 0 : isVisible ? 1 : 0,
+                    transition: satelliteTransition,
                   }}
                 >
                   {s.name}
@@ -495,8 +491,8 @@ export function PartnershipModel() {
             transform: isArrow2Small
               ? `translate(-50%, -50%) translateX(-${ARROW_PHASE_3_SHIFT_PX}px) scale(${ARROW_PHASE_3_SCALE})`
               : `translate(-50%, -50%)`,
+            opacity: isPhase8 ? 0 : 1,
             transition: `transform ${ARROW_PHASE_3_TRANSITION_MS}ms ease-in-out, opacity ${PHASE_8_TRANSITION_MS}ms ease-in-out`,
-            ...preArrowFadeStyle,
           }}
         >
           <svg width={ARROW_LENGTH} height={24} style={{ display: 'block', overflow: 'visible' }}>
@@ -544,8 +540,8 @@ export function PartnershipModel() {
                     left: satellite2Positions[i].x,
                     top: satellite2Positions[i].y,
                     transform: `translate(-50%, -50%) scale(${isVisible ? 1 : 0.3})`,
-                    opacity: isVisible ? 1 : 0,
-                    ...satelliteFadeStyle,
+                    opacity: isPhase8 ? 0 : isVisible ? 1 : 0,
+                    transition: satelliteTransition,
                   }}
                 >
                   {s.name}
@@ -582,8 +578,8 @@ export function PartnershipModel() {
             transform: isArrow3Small
               ? `translate(-50%, -50%) translateX(-${ARROW_PHASE_3_SHIFT_PX}px) scale(${ARROW_PHASE_3_SCALE})`
               : `translate(-50%, -50%)`,
+            opacity: isPhase8 ? 0 : 1,
             transition: `transform ${ARROW_PHASE_3_TRANSITION_MS}ms ease-in-out, opacity ${PHASE_8_TRANSITION_MS}ms ease-in-out`,
-            ...preArrowFadeStyle,
           }}
         >
           <svg width={ARROW_LENGTH} height={24} style={{ display: 'block', overflow: 'visible' }}>
@@ -631,8 +627,8 @@ export function PartnershipModel() {
                     left: satellite3Positions[i].x,
                     top: satellite3Positions[i].y,
                     transform: `translate(-50%, -50%) scale(${isVisible ? 1 : 0.3})`,
-                    opacity: isVisible ? 1 : 0,
-                    ...satelliteFadeStyle,
+                    opacity: isPhase8 ? 0 : isVisible ? 1 : 0,
+                    transition: satelliteTransition,
                   }}
                 >
                   {s.name}
