@@ -63,12 +63,8 @@ const ARROW_3_LEFT_PCT = 112;
 // === Phase 8 — cycle finale knobs ===
 const CYCLE_RADIUS = 180;
 const CYCLE_CIRCLE_VISUAL_RADIUS = 78;
-// Gap between each cycle arrow and the circles it connects.
 const CYCLE_ARROW_GAP_PX = 18;
-// Sagitta (height of arc bow above the chord). Bigger = more pronounced curve.
-// The reference uses gentle simple curves rather than deep arcs.
 const CYCLE_ARROW_SAGITTA = 14;
-// Color of the cycle arrows. Near-black to match the bold reference style.
 const CYCLE_ARROW_COLOR = '#0f172a';
 const CYCLE_ARROW_STROKE_WIDTH = 2;
 const PHASE_8_TRANSITION_MS = PHASE_2_TRANSITION_MS;
@@ -76,11 +72,6 @@ const CYCLE_SVG_SIZE = 700;
 
 const CYCLE_ARROW_START_R = CYCLE_CIRCLE_VISUAL_RADIUS + CYCLE_ARROW_GAP_PX;
 
-// Build a smooth circular-arc path from one cycle slot to the next.
-// Endpoints are placed at TANGENT POINTS — i.e., on the side of each
-// circle facing along the direction of travel around the cycle. The arrow
-// leaves a circle from its "forward" side and arrives at the next circle's
-// "incoming" side, producing the natural arc seen in the reference image.
 function curvedArrowPath(
   startAngleDeg: number,
   endAngleDeg: number,
@@ -92,30 +83,27 @@ function curvedArrowPath(
 ): string {
   const startA = (startAngleDeg * Math.PI) / 180;
   const endA = (endAngleDeg * Math.PI) / 180;
-  // Center of each cycle circle.
   const sc = { x: R * Math.cos(startA), y: R * Math.sin(startA) };
   const ec = { x: R * Math.cos(endA), y: R * Math.sin(endA) };
-  // Tangent direction (clockwise around the cycle) at each circle: ( −sin θ, cos θ ) in SVG y-down coords.
   const startTangent = { x: -Math.sin(startA), y: Math.cos(startA) };
   const endTangent   = { x: -Math.sin(endA),   y: Math.cos(endA)   };
-  // Start: leave the source circle along its forward tangent.
-  // End: arrive at the destination from the side opposite its forward tangent.
   const sp = { x: sc.x + r * startTangent.x + offsetX, y: sc.y + r * startTangent.y + offsetY };
   const ep = { x: ec.x - r * endTangent.x   + offsetX, y: ec.y - r * endTangent.y   + offsetY };
-
-  // Arc radius derived from chord length and desired sagitta.
   const chord = Math.sqrt((ep.x - sp.x) ** 2 + (ep.y - sp.y) ** 2);
   const arcR = (chord * chord) / (8 * sagitta) + sagitta / 2;
-
-  // sweep-flag = 1 → arc bows outward (away from cycle center) for clockwise traversal.
   return `M ${sp.x.toFixed(1)} ${sp.y.toFixed(1)} A ${arcR.toFixed(1)} ${arcR.toFixed(1)} 0 0 1 ${ep.x.toFixed(1)} ${ep.y.toFixed(1)}`;
 }
 
+// Each cycle arrow is nudged ~1 cm outward (≈ 27 px on each axis) in its own
+// outward direction so the cycle remains visually symmetric.
 const cycleArrowPaths = [
-  curvedArrowPath(-90,  0,   CYCLE_RADIUS, CYCLE_ARROW_START_R, CYCLE_ARROW_SAGITTA),
-  curvedArrowPath(  0, 90,   CYCLE_RADIUS, CYCLE_ARROW_START_R, CYCLE_ARROW_SAGITTA),
-  curvedArrowPath( 90, 180,  CYCLE_RADIUS, CYCLE_ARROW_START_R, CYCLE_ARROW_SAGITTA),
-  // p4 (red) → Pentagon (black): nudged ~1 cm northwest (≈ 27 px on each axis).
+  // Pentagon (black, top)  → p2 (blue, right)        : outward = NE
+  curvedArrowPath(-90,  0,   CYCLE_RADIUS, CYCLE_ARROW_START_R, CYCLE_ARROW_SAGITTA,  27, -27),
+  // p2 (blue, right)       → p3 (violet, bottom)     : outward = SE
+  curvedArrowPath(  0, 90,   CYCLE_RADIUS, CYCLE_ARROW_START_R, CYCLE_ARROW_SAGITTA,  27,  27),
+  // p3 (violet, bottom)    → p4 (red, left)          : outward = SW
+  curvedArrowPath( 90, 180,  CYCLE_RADIUS, CYCLE_ARROW_START_R, CYCLE_ARROW_SAGITTA, -27,  27),
+  // p4 (red, left)         → Pentagon (black, top)   : outward = NW
   curvedArrowPath(180, 270,  CYCLE_RADIUS, CYCLE_ARROW_START_R, CYCLE_ARROW_SAGITTA, -27, -27),
 ];
 
@@ -616,7 +604,7 @@ export function PartnershipModel() {
             </div>
           </div>
 
-          {/* Cycle arrows — four smooth circular arcs forming a clockwise loop. */}
+          {/* Cycle arrows */}
           <div
             className="absolute pointer-events-none"
             style={{
