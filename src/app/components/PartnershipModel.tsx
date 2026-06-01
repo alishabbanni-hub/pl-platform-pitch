@@ -77,26 +77,31 @@ const CYCLE_SVG_SIZE = 700;
 const CYCLE_ARROW_START_R = CYCLE_CIRCLE_VISUAL_RADIUS + CYCLE_ARROW_GAP_PX;
 
 // Build a smooth circular-arc path from one cycle slot to the next.
-// We use SVG's A (arc) command rather than a quadratic Bézier so the
-// curvature is constant along the arrow — the smoothest possible bend.
+// Endpoints are placed at TANGENT POINTS — i.e., on the side of each
+// circle facing along the direction of travel around the cycle. The arrow
+// leaves a circle from its "forward" side and arrives at the next circle's
+// "incoming" side, producing the natural arc seen in the reference image.
 function curvedArrowPath(
   startAngleDeg: number,
   endAngleDeg: number,
   R: number,
   r: number,
   sagitta: number,
+  offsetX: number = 0,
+  offsetY: number = 0,
 ): string {
   const startA = (startAngleDeg * Math.PI) / 180;
   const endA = (endAngleDeg * Math.PI) / 180;
+  // Center of each cycle circle.
   const sc = { x: R * Math.cos(startA), y: R * Math.sin(startA) };
   const ec = { x: R * Math.cos(endA), y: R * Math.sin(endA) };
-  const dx = ec.x - sc.x;
-  const dy = ec.y - sc.y;
-  const dist = Math.sqrt(dx * dx + dy * dy);
-  const ux = dx / dist;
-  const uy = dy / dist;
-  const sp = { x: sc.x + r * ux, y: sc.y + r * uy };
-  const ep = { x: ec.x - r * ux, y: ec.y - r * uy };
+  // Tangent direction (clockwise around the cycle) at each circle: ( −sin θ, cos θ ) in SVG y-down coords.
+  const startTangent = { x: -Math.sin(startA), y: Math.cos(startA) };
+  const endTangent   = { x: -Math.sin(endA),   y: Math.cos(endA)   };
+  // Start: leave the source circle along its forward tangent.
+  // End: arrive at the destination from the side opposite its forward tangent.
+  const sp = { x: sc.x + r * startTangent.x + offsetX, y: sc.y + r * startTangent.y + offsetY };
+  const ep = { x: ec.x - r * endTangent.x   + offsetX, y: ec.y - r * endTangent.y   + offsetY };
 
   // Arc radius derived from chord length and desired sagitta.
   const chord = Math.sqrt((ep.x - sp.x) ** 2 + (ep.y - sp.y) ** 2);
@@ -110,7 +115,8 @@ const cycleArrowPaths = [
   curvedArrowPath(-90,  0,   CYCLE_RADIUS, CYCLE_ARROW_START_R, CYCLE_ARROW_SAGITTA),
   curvedArrowPath(  0, 90,   CYCLE_RADIUS, CYCLE_ARROW_START_R, CYCLE_ARROW_SAGITTA),
   curvedArrowPath( 90, 180,  CYCLE_RADIUS, CYCLE_ARROW_START_R, CYCLE_ARROW_SAGITTA),
-  curvedArrowPath(180, 270,  CYCLE_RADIUS, CYCLE_ARROW_START_R, CYCLE_ARROW_SAGITTA),
+  // p4 (red) → Pentagon (black): nudged ~1 cm northwest (≈ 27 px on each axis).
+  curvedArrowPath(180, 270,  CYCLE_RADIUS, CYCLE_ARROW_START_R, CYCLE_ARROW_SAGITTA, -27, -27),
 ];
 
 export function PartnershipModel() {
