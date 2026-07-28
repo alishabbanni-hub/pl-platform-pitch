@@ -17,10 +17,10 @@ const partners: Partner[] = [
 ];
 
 const satellites: Partner[] = [
-  { name: 'Needs Assessment',   bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
-  { name: 'Root Cause Analysis',         bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
-  { name: 'System Mapping',   bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
-  { name: 'Data Transformation',   bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
+  { name: 'Stakeholder Alignment',   bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
+  { name: 'Needs Assessment',         bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
+  { name: 'Learning Context Analysis',   bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
+  { name: 'Data Synthesis',   bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
   { name: 'Transformation Outcomes',  bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
 ];
 
@@ -33,11 +33,11 @@ const satellites2: Partner[] = [
 ];
 
 const satellites3: Partner[] = [
-  { name: 'Accessible',        bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
-  { name: 'Policy-Aligned',              bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
-  { name: 'Engagement Strategies & Toolkits',       bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
-  { name: 'Scalable, Reusable, Updatable',  bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
-  { name: 'Human-Centered',         bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
+  { name: 'Evidence-Based',        bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
+  { name: 'Practice-Based',              bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
+  { name: 'Human-Centered',       bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
+  { name: 'Policy-Aligned',  bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
+  { name: 'Accessible, Scalable, Reusable',         bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
 ];
 
 const RADIUS = 200;
