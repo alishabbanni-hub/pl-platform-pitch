@@ -28,7 +28,7 @@ const satellites2: Partner[] = [
   { name: 'Research Review Teams',  bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
   { name: 'Education Specialists',   bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
   { name: 'Learning Designers',     bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
-  { name: 'Multimedia/Creative Directors',       bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
+  { name: 'Multimedia Directors',       bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
   { name: 'Integrators',            bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
 ];
 
