@@ -637,7 +637,7 @@ export function PartnershipModel() {
                     `transform 500ms ease-out ${ARROW_DRAW_MS + CIRCLE_DELAY_AFTER_ARROW_MS}ms`,
                 }}
               >
-                Insights
+                Contextual Intelligence
               </button>
             </div>
           </div>
