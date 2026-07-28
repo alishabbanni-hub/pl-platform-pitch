@@ -338,7 +338,7 @@ export function PartnershipModel() {
                   transform: 'translate(-50%, -50%)',
                 }}
               >
-                Stakeholder Collaboration & Alignment
+                Stakeholder Collaboration
               </button>
             </div>
           </div>
