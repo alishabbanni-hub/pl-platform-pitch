@@ -25,7 +25,7 @@ const satellites: Partner[] = [
   { name: 'Defining Success',               bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
 ];
 
-// Satellites around Insights — empty labels for now, unique keys so React is happy.
+// Satellites around Contextual Intelligence — empty labels for now, unique keys so React is happy.
 const satellitesInsights: Partner[] = [
   { name: 'insight-slot-1', bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
   { name: 'insight-slot-2', bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
