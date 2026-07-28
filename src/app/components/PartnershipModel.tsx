@@ -33,11 +33,11 @@ const satellites2: Partner[] = [
 ];
 
 const satellites3: Partner[] = [
-  { name: 'Scenario-driven',        bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
-  { name: 'Immersive',              bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
-  { name: 'Experience-based',       bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
-  { name: 'Engagement Strategies',  bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
-  { name: 'Teach Toolkits',         bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
+  { name: 'Accessible eLearning',        bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
+  { name: 'Policy Alignment',              bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
+  { name: 'Strategies & Toolkits',       bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
+  { name: 'Reusable & Scalable',  bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
+  { name: 'Updatable',         bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
 ];
 
 const RADIUS = 200;
