@@ -33,8 +33,8 @@ const satellites2: Partner[] = [
 ];
 
 const satellites3: Partner[] = [
-  { name: 'Evidence-Based',        bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
-  { name: 'Practice-Based',              bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
+  { name: 'Multimodal',        bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
+  { name: 'Evidence-Driven',              bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
   { name: 'Human-Centered',       bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
   { name: 'Policy-Aligned',  bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
   { name: 'Accessible, Scalable, Reusable',         bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
@@ -599,7 +599,7 @@ export function PartnershipModel() {
                     `transform 500ms ease-out ${ARROW_DRAW_MS + CIRCLE_DELAY_AFTER_ARROW_MS}ms`,
                 }}
               >
-                Tailored Solution Design
+                Digital Professional Learning Solution 
               </button>
             </div>
           </div>
