@@ -338,7 +338,7 @@ export function PartnershipModel() {
                   transform: 'translate(-50%, -50%)',
                 }}
               >
-                Structured Discovery Framework
+                Stakeholder Alignment
               </button>
             </div>
           </div>
