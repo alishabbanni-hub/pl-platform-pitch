@@ -27,10 +27,10 @@ const satellites: Partner[] = [
 
 // Satellites around Insights — empty labels for now, unique keys so React is happy.
 const satellitesInsights: Partner[] = [
-  { name: 'Understanding Challenges', bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
-  { name: 'Building Trust', bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
-  { name: 'Learning Priorities', bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
-  { name: 'Opportunity Areas', bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
+  { name: 'insight-slot-1', bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
+  { name: 'insight-slot-2', bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
+  { name: 'insight-slot-3', bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
+  { name: 'insight-slot-4', bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
   { name: 'insight-slot-5', bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
 ];
 
@@ -225,6 +225,57 @@ export function PartnershipModel() {
     }
   }, [phase, visibleCount, visibleSatelliteCount, visibleSatelliteCountInsights, visibleSatelliteCount2, visibleSatelliteCount3, cameraStage]);
 
+  // From the cycle scene (phase 10) only, jump straight to any pentagon's
+  // satellite-revealed view. Sets phase, camera, and every satellite count
+  // atomically so the target scene composes correctly on arrival. Satellites
+  // appear instantly (no stagger). Linear progression is untouched — in phases
+  // 0–9 the buttons still call handleCenterClick.
+  const jumpToPentagon = useCallback(
+    (target: 'center' | 'p2' | 'insights' | 'p3' | 'p4') => {
+      // Partners around the centre pentagon are visible in every satellite view.
+      setVisibleCount(partners.length);
+      // Default everyone else to invisible; specific cases enable what should show.
+      setVisibleSatelliteCount(0);
+      setVisibleSatelliteCountInsights(0);
+      setVisibleSatelliteCount2(0);
+      setVisibleSatelliteCount3(0);
+
+      switch (target) {
+        case 'center':
+          setPhase(1);
+          setCameraStage(0);
+          break;
+        case 'p2':
+          setPhase(3);
+          setVisibleSatelliteCount(satellites.length);
+          setCameraStage(1);
+          break;
+        case 'insights':
+          setPhase(5);
+          setVisibleSatelliteCount(satellites.length);
+          setVisibleSatelliteCountInsights(satellitesInsights.length);
+          setCameraStage(2);
+          break;
+        case 'p3':
+          setPhase(7);
+          setVisibleSatelliteCount(satellites.length);
+          setVisibleSatelliteCountInsights(satellitesInsights.length);
+          setVisibleSatelliteCount2(satellites2.length);
+          setCameraStage(3);
+          break;
+        case 'p4':
+          setPhase(9);
+          setVisibleSatelliteCount(satellites.length);
+          setVisibleSatelliteCountInsights(satellitesInsights.length);
+          setVisibleSatelliteCount2(satellites2.length);
+          setVisibleSatelliteCount3(satellites3.length);
+          setCameraStage(4);
+          break;
+      }
+    },
+    [],
+  );
+
   const positions = partners.map((_, i) => {
     const angle = ((-90 + i * 72) * Math.PI) / 180;
     return { x: Math.cos(angle) * RADIUS, y: Math.sin(angle) * RADIUS };
@@ -398,7 +449,7 @@ export function PartnershipModel() {
               })}
               <button
                 type="button"
-                onClick={handleCenterClick}
+                onClick={isCyclePhase ? () => jumpToPentagon('center') : handleCenterClick}
                 aria-label="Advance presentation"
                 className="absolute flex items-center justify-center rounded-full bg-slate-900 text-white font-semibold text-center shadow-2xl shadow-slate-900/30 cursor-pointer transition-transform duration-200 hover:scale-105 active:scale-95"
                 style={{
@@ -485,7 +536,7 @@ export function PartnershipModel() {
               })}
               <button
                 type="button"
-                onClick={handleCenterClick}
+                onClick={isCyclePhase ? () => jumpToPentagon('p2') : handleCenterClick}
                 aria-label="Reveal Elements / advance to next phase"
                 className="absolute flex items-center justify-center rounded-full bg-indigo-600 text-white font-semibold text-center shadow-2xl shadow-indigo-600/40 cursor-pointer"
                 style={{
@@ -572,7 +623,7 @@ export function PartnershipModel() {
               })}
               <button
                 type="button"
-                onClick={handleCenterClick}
+                onClick={isCyclePhase ? () => jumpToPentagon('insights') : handleCenterClick}
                 aria-label="Advance to next phase"
                 className="absolute flex items-center justify-center rounded-full bg-teal-600 text-white font-semibold text-center shadow-2xl shadow-teal-600/40 cursor-pointer"
                 style={{
@@ -659,7 +710,7 @@ export function PartnershipModel() {
               })}
               <button
                 type="button"
-                onClick={handleCenterClick}
+                onClick={isCyclePhase ? () => jumpToPentagon('p3') : handleCenterClick}
                 aria-label="Reveal Collaborators / advance to next phase"
                 className="absolute flex items-center justify-center rounded-full bg-violet-600 text-white font-semibold text-center shadow-2xl shadow-violet-600/40 cursor-pointer"
                 style={{
@@ -746,7 +797,7 @@ export function PartnershipModel() {
               })}
               <button
                 type="button"
-                onClick={handleCenterClick}
+                onClick={isCyclePhase ? () => jumpToPentagon('p4') : handleCenterClick}
                 aria-label="Reveal Learning Solution attributes / replay"
                 className="absolute flex items-center justify-center rounded-full bg-rose-600 text-white font-semibold text-center shadow-2xl shadow-rose-600/40 cursor-pointer"
                 style={{
