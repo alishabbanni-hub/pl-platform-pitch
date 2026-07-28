@@ -19,13 +19,13 @@ const partners: Partner[] = [
 const satellites: Partner[] = [
   { name: 'Needs Assessment',   bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
   { name: 'Root Cause Analysis',         bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
-  { name: 'Action/Experience Mapping',   bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
+  { name: 'System Mapping',   bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
   { name: 'Data Transformation',   bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
   { name: 'Transformation Outcomes',  bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
 ];
 
 const satellites2: Partner[] = [
-  { name: 'Research Teams',  bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
+  { name: 'Research Review Teams',  bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
   { name: 'Education Specialists',   bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
   { name: 'Learning Designers',     bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
   { name: 'Multimedia/Creative Directors',       bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
@@ -512,7 +512,7 @@ export function PartnershipModel() {
                     `transform 500ms ease-out ${ARROW_DRAW_MS + CIRCLE_DELAY_AFTER_ARROW_MS}ms`,
                 }}
               >
-                Participatory Professional Learning Solution Design
+                Participatory Learning Design
               </button>
             </div>
           </div>
