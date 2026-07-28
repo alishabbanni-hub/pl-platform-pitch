@@ -274,7 +274,7 @@ export function PartnershipModel() {
     <section className="relative min-h-screen w-full overflow-hidden bg-white flex flex-col">
       <header className="px-12 pt-8 pb-4">
         <h1 className="text-3xl md:text-4xl font-semibold text-slate-900">
-          Partnership &amp; Collaboration Model
+          School Capability Development &amp; Model
         </h1>
         <p className="mt-2 text-base md:text-lg text-slate-500">
           How our Professional Learning platform connects the ecosystem
