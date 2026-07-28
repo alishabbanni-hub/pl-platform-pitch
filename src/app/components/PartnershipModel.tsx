@@ -599,7 +599,7 @@ export function PartnershipModel() {
                     `transform 500ms ease-out ${ARROW_DRAW_MS + CIRCLE_DELAY_AFTER_ARROW_MS}ms`,
                 }}
               >
-                Digital Professional Learning Solution 
+                Learning Solution 
               </button>
             </div>
           </div>
