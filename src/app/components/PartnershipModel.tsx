@@ -18,9 +18,9 @@ const partners: Partner[] = [
 
 const satellites: Partner[] = [
   { name: 'Stakeholder Alignment',   bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
-  { name: 'Needs Assessment',         bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
+  { name: 'Learning Needs Assessment',         bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
   { name: 'Learning Context Analysis',   bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
-  { name: 'Data Synthesis',   bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
+  { name: 'Evidence Synthesis',   bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
   { name: 'Transformation Outcomes',  bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
 ];
 
