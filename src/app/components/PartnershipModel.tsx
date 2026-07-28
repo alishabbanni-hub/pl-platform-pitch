@@ -27,10 +27,10 @@ const satellites: Partner[] = [
 
 // Satellites around Insights — empty labels for now, unique keys so React is happy.
 const satellitesInsights: Partner[] = [
-  { name: 'insight-slot-1', bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
-  { name: 'insight-slot-2', bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
-  { name: 'insight-slot-3', bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
-  { name: 'insight-slot-4', bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
+  { name: 'Understanding Challenges', bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
+  { name: 'Building Trust', bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
+  { name: 'Learning Priorities', bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
+  { name: 'Opportunity Areas', bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
   { name: 'insight-slot-5', bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
 ];
 
