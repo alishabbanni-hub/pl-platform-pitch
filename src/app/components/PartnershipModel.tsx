@@ -30,7 +30,7 @@ const satellitesInsights: Partner[] = [
   { name: 'Understanding Challenges', bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
   { name: 'Learning Priorities', bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
   { name: 'Strength & Opportunities', bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
-  { name: 'insight-slot-4', bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
+  { name: 'x-slot-4', bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
   { name: 'insight-slot-5', bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
 ];
 
