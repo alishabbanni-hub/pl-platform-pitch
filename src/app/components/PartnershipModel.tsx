@@ -18,20 +18,20 @@ const partners: Partner[] = [
 
 // Satellites around p2 (Structured Discovery Framework)
 const satellites: Partner[] = [
-  { name: 'Engaging Stakeholders',          bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
-  { name: 'Analyzing the Learning Context', bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
-  { name: 'L',                              bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
+  { name: 'Needs Assessment',          bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
+  { name: 'Organizational Distinctiveness', bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
+  { name: 'Experience Mapping',                              bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
   { name: 'Evidence Synthesis',             bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
-  { name: 'Defining Success',               bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
+  { name: 'Transformation Outcomes',               bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
 ];
 
 // Satellites around Insights — empty labels for now, unique keys so React is happy.
 const satellitesInsights: Partner[] = [
-  { name: 'c', bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
-  { name: 'c', bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
+  { name: 'Understanding School', bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
+  { name: 'Organizational Distinctiveness', bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
   { name: 'c', bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
-  { name: 'c', bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
-  { name: 'c', bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
+  { name: 'Understanding strengths', bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
+  { name: 'Success Definition', bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
 ];
 
 // Satellites around p3 (Participatory Learning Design)
