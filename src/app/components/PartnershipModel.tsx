@@ -36,7 +36,7 @@ const satellites3: Partner[] = [
   { name: 'Accessible eLearning',        bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
   { name: 'Policy-Aligned',              bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
   { name: 'Engagement Strategies & Toolkits',       bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
-  { name: 'Scalable',  bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
+  { name: 'Scalable, Reusable, Updatable',  bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
   { name: 'Human-centered',         bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
 ];
 
