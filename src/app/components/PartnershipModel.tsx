@@ -36,11 +36,11 @@ const satellitesInsights: Partner[] = [
 
 // Satellites around p3 (Participatory Learning Design)
 const satellites2: Partner[] = [
-  { name: 'School Leadership',      bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
-  { name: 'Teachers, Students, Staff', bg: 'bg-cyan-500', shadow: 'shadow-cyan-500/40'    },
-  { name: 'Education Specialists',  bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
-  { name: 'Learning Designers',     bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
-  { name: 'Multimedia Directors',   bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
+  { name: 'Research Teams',      bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
+  { name: 'Education Specialists', bg: 'bg-cyan-500', shadow: 'shadow-cyan-500/40'    },
+  { name: 'Learning Designers',  bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
+  { name: 'Creative Directors',     bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
+  { name: '',   bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
 ];
 
 // Satellites around p4 (Learning Solution)
