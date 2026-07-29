@@ -19,8 +19,8 @@ const partners: Partner[] = [
 // Satellites around p2 (Structured Discovery Framework)
 const satellites: Partner[] = [
   { name: 'Needs Assessment',          bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
-  { name: 'Organizational Distinctiveness', bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
-  { name: 'Experience Mapping',                              bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
+  { name: 'Root Cause Analysis', bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
+  { name: 'Journey Mapping',                              bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
   { name: 'Evidence Synthesis',             bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
   { name: 'Transformation Outcomes',               bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
 ];
