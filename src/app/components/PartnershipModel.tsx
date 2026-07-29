@@ -40,7 +40,7 @@ const satellites2: Partner[] = [
   { name: 'Education Specialists', bg: 'bg-cyan-500', shadow: 'shadow-cyan-500/40'    },
   { name: 'Learning Designers',  bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
   { name: 'Creative Directors',     bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
-  { name: '',   bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
+  { name: 'School Leadership',   bg: 'bg-purple-500',  shadow: 'shadow-purple-500/40'  },
 ];
 
 // Satellites around p4 (Learning Solution)
