@@ -18,7 +18,7 @@ const partners: Partner[] = [
 
 // Satellites around p2 (Structured Discovery Framework)
 const satellites: Partner[] = [
-  { name: 'Collaborative Needs Assessment',          bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
+  { name: 'Understanding Learning Context',          bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
   { name: 'Organizational Alignment', bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
   { name: 'Challenging Assumptions',                              bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
   { name: 'Gathering Evidence',             bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
@@ -27,7 +27,7 @@ const satellites: Partner[] = [
 
 // Satellites around Insights — empty labels for now, unique keys so React is happy.
 const satellitesInsights: Partner[] = [
-  { name: 'Understanding Learning Context', bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
+  { name: '', bg: 'bg-blue-500',    shadow: 'shadow-blue-500/40'    },
   { name: 'Advising', bg: 'bg-cyan-500',    shadow: 'shadow-cyan-500/40'    },
   { name: 'Learning Strategy', bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40' },
   { name: '', bg: 'bg-amber-500',   shadow: 'shadow-amber-500/40'   },
